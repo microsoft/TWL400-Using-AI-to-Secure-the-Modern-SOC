@@ -1,0 +1,53 @@
+---
+title: Introduction
+layout: home
+nav_order: 1
+---
+
+# Using AI to Secure the Modern SOC — Module 3 Hands-On Lab
+
+**Cross-Layer Attack Lab (End-to-End)**
+
+{: .important }
+> **Draft.** This lab was authored from the design outline ahead of the lab tenant build. Portal navigation, KQL, Security Copilot prompts, screenshots, and the seeded entities (users, devices, the AI app, the poisoned document) are **illustrative** and will be validated against the provisioned environment during the build.
+
+This hands-on lab is the practical core of **Module 3** of the *Using AI to Secure the Modern SOC* workshop. While the surrounding modules reason about AI threats, architecture, SOC operations, and executive value on a whiteboard, this module puts you in a **live tenant** to investigate and respond to a coordinated, AI-driven attack in real Microsoft tooling — and to produce the module's executive deliverable, the **Proof Through Scenario**, that feeds Modules 4 and 5.
+
+## Scenario
+
+You are a security Cloud Solution Architect advising **Acesa**, a large enterprise scaling AI from pilots to production on a heavy but fragmented Microsoft security investment. Acesa's SOC is understaffed and buried under alert volume.
+
+Over a short window, a coordinated AI-driven attack has moved across **identity, AI, data, and infrastructure**. Each signal is individually low-risk — an impossible-travel sign-in, a phishing email, a saved "policy update," some inference traffic, an endpoint script — and lands in a different console. From the SOC's view nothing stands out. In reality, the **Acesa Refund Agent** and the infrastructure behind it have been compromised.
+
+You are brought in to prove what happened, show why detection failed, and demonstrate the AI-driven SecOps response that should have fired. The lab rewards **system-level SecOps judgment** — correlating signals across layers and recognizing where telemetry and automation gaps let the chain through — not single-product feature clicks.
+
+## What you'll do
+
+| # | Exercise | Duration |
+|---|----------|----------|
+| 00 | [Access Your Lab Environment](docs/00_lab_environment/00_lab_environment.md) | ~10 min |
+| 01 | [Triage & Scope the Cross-Layer Incident](docs/01_triage_and_scope/01_triage_and_scope.md) | ~30 min |
+| 02 | [Reconstruct the Attack Lifecycle Across Layers](docs/02_reconstruct_the_lifecycle/02_reconstruct_the_lifecycle.md) | ~35 min |
+| 03 | [Design & Execute the Coordinated Response](docs/03_coordinated_response/03_coordinated_response.md) | ~35 min |
+| 04 | [Proof Through Scenario — Visualize the Attack & Failure Points](docs/04_proof_through_scenario/04_proof_through_scenario.md) | ~20 min |
+| 05 | [Wrap-Up & Hand-Off](docs/05_wrap_up_and_hand_off/05_wrap_up_and_hand_off.md) | ~5 min |
+| | **Total** | **~2 hours** |
+
+{: .note }
+> Durations are proposed and will be finalized against the parent workshop's timing design.
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| Lab credentials | A pre-provisioned Acesa tenant account, supplied by your facilitator |
+| Browser | A current Microsoft Edge or Chrome browser — no VM or local install required |
+| Microsoft 365 / Security licensing | Provisioned in the lab tenant: Microsoft 365 E5, Security Copilot (SCUs), Defender XDR, Microsoft Sentinel, Purview DSPM for AI, Entra ID Protection / Conditional Access |
+| Background (recommended) | Familiarity with Defender XDR incidents, KQL basics, and the idea of RAG-grounded AI apps. Modules 1–2 of the workshop provide the conceptual grounding. |
+
+{: .note }
+> **Azure costs:** All resources are provisioned in the lab tenant by the facilitator. You will not incur personal charges, and there is no learner cleanup — the environment is reset between cohorts.
+
+## Lab environment
+
+You investigate from the **Microsoft Defender portal** (unified SecOps), with **Microsoft Sentinel** as the telemetry backbone and **standalone Security Copilot** as the cross-layer reasoning spine. Everything you need is reachable from the browser with your assigned credentials. Exercise 00 walks you through signing in and confirming access before the investigation begins.
