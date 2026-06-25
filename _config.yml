@@ -1,9 +1,9 @@
 title: "TWL400: Using AI to Secure the Modern SOC"
 description: >-
   Module 3 hands-on lab — Cross-Layer Attack Lab (End-to-End). Investigate and
-  respond to a coordinated, AI-driven attack spanning identity, AI, data, and
-  infrastructure using Microsoft Security Copilot, Defender XDR, Sentinel,
-  Entra, and Purview.
+  respond to a coordinated, AI-driven attack spanning identity, AI, data,
+  infrastructure, and endpoint using Microsoft Security Copilot, Defender XDR,
+  Sentinel, Entra, and Microsoft Defender for Cloud — AI threat protection.
 
 theme: just-the-docs
 

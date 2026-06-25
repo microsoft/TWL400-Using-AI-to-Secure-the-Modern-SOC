@@ -9,22 +9,22 @@ has_children: true
 
 ## Scenario
 
-Before you can investigate anything, you need to be inside Acesa's tenant with the right consoles open. This lab is delivered in a **pre-provisioned, hosted tenant** — you need only a browser and the credentials your facilitator gave you. No virtual machines, no installs.
+Before you can investigate anything, you need to be inside Zava's tenant with the right consoles open. This lab is delivered in a **pre-provisioned, hosted tenant** — you need only a browser and the credentials your facilitator gave you. No virtual machines, no installs.
 
-This short exercise gets you signed in, confirms you can reach the three surfaces you'll use throughout the lab — the **Microsoft Defender portal** (unified SecOps), **Microsoft Sentinel**, and **standalone Security Copilot** — and orients you to the scenario and the alert queue you're about to make sense of.
+This short exercise gets you signed in, confirms you can reach the three surfaces you'll use throughout the lab — the **Microsoft Defender portal** (unified SecOps), **Microsoft Sentinel**, and **standalone Security Copilot** — and orients you to the scenario and the **noisy incident queue** you're about to make sense of: roughly **25 decoy incidents** with one coordinated cross-layer attack scattered among them.
 
 ## Objectives
 
 After completing this exercise, you'll be able to:
 
-* Sign in to the Acesa lab tenant and complete multifactor authentication
+* Sign in to the Zava lab tenant and complete multifactor authentication
 * Confirm access to the Defender portal, Microsoft Sentinel, and standalone Security Copilot
-* Locate the incident queue and recognize the alert volume the SOC is working under
+* Locate the noisy incident queue — ~25 decoy incidents — and recognize the alert volume the SOC is working under
 * Restate the scenario, your role, and the deliverable you'll produce
 
 ## Duration
 
-* **Estimated time:** 10 minutes
+* **Estimated time:** 10–15 minutes
 
 ## Tasks
 

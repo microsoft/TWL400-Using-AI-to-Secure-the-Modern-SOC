@@ -2,7 +2,7 @@
 
 This repository contains the **Module 3 hands-on lab** — *Cross-Layer Attack Lab (End-to-End)* — for the Microsoft L300/L400 TechWorkshop **Using AI to Secure the Modern SOC**.
 
-Learners take the role of a security Cloud Solution Architect advising **Acesa**, whose SOC is buried in alert noise. In one continuous incident they scope a coordinated, AI-driven attack that crosses identity, AI, data, and infrastructure; reconstruct the lifecycle; execute a coordinated automated response; and assemble the module's **Proof Through Scenario** executive deliverable — using Microsoft Security Copilot, Defender XDR, Microsoft Sentinel, Microsoft Entra, and Microsoft Purview.
+Learners take the role of a security Cloud Solution Architect advising **Zava**, whose SOC is buried in alert noise. In one continuous incident they scope a coordinated, AI-driven attack that crosses identity, AI, data, infrastructure, and endpoint; reconstruct the lifecycle; execute a coordinated automated response; and assemble the module's **Proof Through Scenario** executive deliverable — using Microsoft Security Copilot, Defender XDR, Microsoft Sentinel, Microsoft Entra, and Microsoft Defender for Cloud — AI threat protection.
 
 The lab is published as a GitHub Pages site. Instructional content lives under [`docs/`](docs/), with image assets under [`media/`](media/).
 
