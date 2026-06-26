@@ -25,12 +25,12 @@ You are brought in to prove what happened, show why detection failed, and demons
 
 | # | Exercise | Duration |
 |---|----------|----------|
-| 00 | [Access Your Lab Environment](docs/00_lab_environment/00_lab_environment.md) | ~10–15 min |
-| 01 | [Triage & Scope the Cross-Layer Incident](docs/01_triage_and_scope/01_triage_and_scope.md) | ~20 min |
-| 02 | [Reconstruct the Attack Lifecycle Across Layers](docs/02_reconstruct_the_lifecycle/02_reconstruct_the_lifecycle.md) | ~25 min |
-| 03 | [Design & Execute the Coordinated Response](docs/03_coordinated_response/03_coordinated_response.md) | ~25 min |
-| 04 | [Proof Through Scenario — Visualize the Attack & Failure Points](docs/04_proof_through_scenario/04_proof_through_scenario.md) | ~15 min |
-| 05 | [Wrap-Up & Hand-Off](docs/05_wrap_up_and_hand_off/05_wrap_up_and_hand_off.md) | <15 min (or post-delivery) |
+| 00 | [Access Your Lab Environment](docs/00_lab_environment/00_lab_environment.html) | ~10–15 min |
+| 01 | [Triage & Scope the Cross-Layer Incident](docs/01_triage_and_scope/01_triage_and_scope.html) | ~20 min |
+| 02 | [Reconstruct the Attack Lifecycle Across Layers](docs/02_reconstruct_the_lifecycle/02_reconstruct_the_lifecycle.html) | ~25 min |
+| 03 | [Design & Execute the Coordinated Response](docs/03_coordinated_response/03_coordinated_response.html) | ~25 min |
+| 04 | [Proof Through Scenario — Visualize the Attack & Failure Points](docs/04_proof_through_scenario/04_proof_through_scenario.html) | ~15 min |
+| 05 | [Wrap-Up & Hand-Off](docs/05_wrap_up_and_hand_off/05_wrap_up_and_hand_off.html) | <15 min (or post-delivery) |
 
 {: .note }
 > Durations are proposed and will be finalized against the parent workshop's timing design.

@@ -28,5 +28,5 @@ After completing this exercise, you'll be able to:
 
 ## Tasks
 
-- Task 00.01 — [Sign in and verify console access](00_01.md)
-- Task 00.02 — [Orient to the scenario and the SOC alert queue](00_02.md)
+- Task 00.01 — [Sign in and verify console access](00_01.html)
+- Task 00.02 — [Orient to the scenario and the SOC alert queue](00_02.html)
