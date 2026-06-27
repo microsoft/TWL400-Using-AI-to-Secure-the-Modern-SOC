@@ -224,7 +224,7 @@
     "SourceIP": "102.89.42.17",
     "Action": "AiTMPhishingTokenTheft",
     "Severity": "Medium",
-    "Details": "AiTM reverse-proxy intercepted MFA session token for mariya.petrova; impossible travel detected — legitimate sign-in from Seattle (US) followed 3 min later by token replay from 102.89.42.17 (Lagos, NG)"
+    "Details": "AiTM reverse-proxy intercepted MFA session token for mariya.petrova; Entra ID Protection flagged sign-in from anonymous IP 102.89.42.17 — classified as anonymizing infrastructure (Tor exit node or known anonymous proxy) in Microsoft threat intelligence"
   },
 
   {
@@ -250,7 +250,7 @@
     "Recipient": "mariya.petrova@{DOMAIN}",
     "Subject": "Vendor Refund Policy Update Q3",
     "NetworkMessageId": "8f2a1c7e-4b6d-4e2a-9f3c-1a2b3c4d5e6f",
-    "Details": "Email from look-alike sender billing@acesa-refunds.net delivered to inbox; subject 'Vendor Refund Policy Update Q3'; attachment Vendor-Refund-Policy-Update-Q3.docx saved to OneDrive /sites/RefundKB"
+    "Details": "Email from look-alike sender billing@acesa-refunds.net delivered to inbox; subject 'Vendor Refund Policy Update Q3'; attachment trusted-report.docx saved to grounding storage"
   },
 
   {
@@ -284,7 +284,7 @@
     "Action": "PromptInjectionAttempt",
     "Severity": "Medium",
     "AzureResourceId": "/subscriptions/{SUBSCRIPTION}/resourceGroups/rg-zava-ai-prod/providers/Microsoft.CognitiveServices/accounts/refund-agent-prod",
-    "Details": "Attacker-crafted content in Vendor-Refund-Policy-Update-Q3.docx triggered prompt injection via Refund Agent grounding pipeline; 7 anomalous queries to refund-agent-prod observed; grounding source /sites/RefundKB now contains poisoned policy document"
+    "Details": "Attacker-crafted content in trusted-report.docx triggered prompt injection via Refund Agent grounding pipeline; 7 anomalous queries to refund-agent-prod observed; grounding storage now contains poisoned policy document"
   },
 
   {
