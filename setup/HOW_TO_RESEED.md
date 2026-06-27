@@ -25,6 +25,30 @@ A re-seed is therefore just: **turn the generators off → wipe the output → a
 - Know your tenant domain (e.g. `AcesaDev.onmicrosoft.com`).
 - **Identity objects exist.** Verify that `mariya.petrova@AcesaDev.onmicrosoft.com` and the `sp-refund-agent-inference` service principal are present in the tenant (portal.azure.com → Microsoft Entra ID → Users / App registrations). If either is missing, run `provision_lab_identities.ps1` (see RUNBOOK.md § TENANT HYDRATION) before continuing.
 - **Mariya has an active `anonymousIpAddress` risk event.** Check: Entra ID Protection → Risky users → find Mariya Petrova → Risk state should not be **Remediated** or **Dismissed**. If her risk was cleared since the last lab run (e.g. a Global Admin dismissed it), re-trigger the detection by signing in as Mariya from Tor Browser before students reach Exercise 02.02. See RUNBOOK.md § H2–H3 for the exact procedure.
+- **Logic App side effects (check if the Zava-Contain-CrossLayer playbook was run).** If any student triggered the automation rule in Exercise 03.02, the playbook may have left state that breaks `seed_ai_attacks.py`. Check and fix both conditions before continuing:
+
+  *SP disabled?* The playbook's Step 2 sets `accountEnabled = false` on `sp-refund-agent-inference`. If disabled, `seed_ai_attacks.py` cannot authenticate as the SP and will fail.
+  ```powershell
+  $SpId = (Get-MgServicePrincipal -Filter "displayName eq 'sp-refund-agent-inference'").Id
+  (Get-MgServicePrincipal -ServicePrincipalId $SpId).AccountEnabled
+  ```
+  If output is `False`:
+  ```powershell
+  Update-MgServicePrincipal -ServicePrincipalId $SpId -AccountEnabled
+  ```
+
+  *OpenAI network access restricted?* The playbook's Step 5 (if approved) sets `networkAcls.defaultAction = Deny` on the Azure OpenAI resource. If restricted, `seed_ai_attacks.py` cannot reach the endpoint.
+  ```powershell
+  $OaiName = az cognitiveservices account list -g rg-soclab --query "[?kind=='OpenAI'] | [0].name" -o tsv
+  az cognitiveservices account show -g rg-soclab -n $OaiName --query "properties.networkAcls.defaultAction" -o tsv
+  ```
+  If output is `Deny`, re-open access:
+  ```powershell
+  az cognitiveservices account update -g rg-soclab -n $OaiName --custom-domain $OaiName
+  az rest --method patch --url "https://management.azure.com/subscriptions/5c07e542-68ae-47ff-97cd-a6b3777b4fe1/resourceGroups/rg-soclab/providers/Microsoft.CognitiveServices/accounts/$OaiName?api-version=2023-05-01" --body "{\"properties\":{\"networkAcls\":{\"defaultAction\":\"Allow\"}}}"
+  ```
+
+  The blob deletion (playbook Step 3) is already handled: `plant_poisoned_doc.py` in reseed Step 6 re-uploads the grounding document.
 
 ## Procedure
 

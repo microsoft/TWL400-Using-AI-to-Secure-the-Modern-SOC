@@ -246,6 +246,97 @@ Record this value for reference.
 
 ---
 
+### STEP 1f — Deploy Zava-Contain-CrossLayer Playbook
+
+The `Zava-Contain-CrossLayer` Logic App is a pre-provisioned Sentinel playbook used in Exercise 03.02. Students review it and wire it to an automation rule — they do not deploy it. Deploy it here, immediately after STEP 1e, before students arrive.
+
+The playbook implements cross-layer containment in six steps:
+
+| Step | Layer | Action |
+|------|-------|--------|
+| 1 | Identity | Revoke sign-in sessions — mariya.petrova (**Compose/acknowledged** in lab — see note below) |
+| 2 | Identity | Disable service principal sp-refund-agent-inference (**Compose/acknowledged** in lab — see note below) |
+| 3 | Data / AI | Delete trusted-report.docx from grounding container in stsoclabtgu35glfngjhc (Storage HTTP + managed identity) |
+| 4 | — | Send approval email and wait for Approve / Reject (Office 365 Outlook connector) |
+| 5 | Infrastructure | If approved: restrict network access on oai-soclab-v## to Deny All (ARM HTTP + managed identity) |
+| 6 | — | Post containment summary comment to the Sentinel incident (Sentinel connector + managed identity) |
+
+⚠️ **Steps 1 & 2 design note:** These steps are implemented as Compose actions in the ARM template (not Graph HTTP calls). Assigning Microsoft Graph permissions to a managed identity in this tenant requires Entra ID replication that can take 30–60 minutes — unacceptable in a setup procedure. Students see all six steps in the Logic App designer and the full containment pattern; the Compose actions emit a status string confirming those actions were executed manually in Task 03.01. Steps 3–6 run live. No Microsoft Graph permissions are required.
+
+**1f-i. Deploy the Logic App and API connections:**
+
+The ARM template at `setup/zava-contain-crosslayer.json` deploys the Logic App (with system-assigned managed identity), the Sentinel API connection (managed identity auth), and the Office 365 API connection (OAuth — see 1f-iv for authorization).
+
+```powershell
+$WsName = az monitor log-analytics workspace list -g rg-soclab --query "[0].name" -o tsv
+$OaiName = az cognitiveservices account list -g rg-soclab --query "[?kind=='OpenAI'] | [0].name" -o tsv
+az deployment group create -g rg-soclab -n zava-contain-crosslayer -f zava-contain-crosslayer.json -p workspaceName=$WsName oaiResourceName=$OaiName
+```
+
+The approval email recipient is hardcoded in the template as `mariya.petrova@AcesaDev.onmicrosoft.com` — the only Exchange Online mailbox available in the lab tenant without adding infrastructure. This is invisible to students: they see the playbook steps in the Logic App designer but not the `To` address. Narratively it is slightly odd (the contained user receives the approval email), but inconsequential for the exercise.
+
+Wait for `"provisioningState": "Succeeded"` before continuing.
+
+**1f-ii. Capture the managed identity object ID:**
+
+```powershell
+$PrincipalId = az deployment group show -g rg-soclab -n zava-contain-crosslayer --query "properties.outputs.logicAppPrincipalId.value" -o tsv
+Write-Host "Managed identity principal ID: $PrincipalId"
+```
+
+Verify `$PrincipalId` is a non-empty GUID before running the role assignments below.
+
+**1f-iii. Grant managed identity permissions:**
+
+Steps 1 and 2 of the playbook run as Compose (acknowledged) actions in this lab and do not call Microsoft Graph — no Entra directory role is required. The three ARM role assignments below are sufficient for the playbook to run end-to-end.
+
+*Storage Blob Data Contributor on stsoclabtgu35glfngjhc (required for Step 3: delete blob):*
+```powershell
+$StId = az storage account show -n stsoclabtgu35glfngjhc -g rg-soclab --query id -o tsv
+az role assignment create --assignee-object-id $PrincipalId --assignee-principal-type ServicePrincipal --role "Storage Blob Data Contributor" --scope $StId
+```
+
+*Contributor on rg-soclab (required for Step 5: update OpenAI network rules):*
+```powershell
+$RgId = az group show -n rg-soclab --query id -o tsv
+az role assignment create --assignee-object-id $PrincipalId --assignee-principal-type ServicePrincipal --role "Contributor" --scope $RgId
+```
+
+*Microsoft Sentinel Responder on the Sentinel workspace (required for Step 6: post incident comment):*
+```powershell
+$WsId = az monitor log-analytics workspace show -g rg-soclab -n $WsName --query id -o tsv
+az role assignment create --assignee-object-id $PrincipalId --assignee-principal-type ServicePrincipal --role "Microsoft Sentinel Responder" --scope $WsId
+```
+
+⚠️ RBAC propagation takes 1–3 minutes. Wait before testing the playbook.
+
+**1f-iv. Authorize the Office 365 API connection (manual — portal):**
+
+The approval email step (Step 4) uses a delegated OAuth token tied to a specific user account. This cannot be automated; it must be done once per deployment.
+
+1. Azure portal → **rg-soclab** → resource **office365-zava** (type: API connection)
+2. Click **Edit API connection**
+3. Click **Authorize** → sign in with the Office 365 account that will send approval emails
+4. Click **Save**
+
+The authorizing account must have an Exchange Online mailbox. The approval email will appear to come from this account.
+
+⚠️ If the portal shows "Authorization failed" after sign-in, the account may lack an Exchange Online license or is in a different tenant. Use an account in AcesaDev.onmicrosoft.com with an appropriate license.
+
+**1f-v. Verify the playbook appears in Sentinel Active Playbooks:**
+
+1. Azure portal → Microsoft Sentinel → `$WsName` → **Automation** → **Active playbooks**
+2. Confirm **Zava-Contain-CrossLayer** is listed with Status = **Enabled**
+
+If the playbook is missing: wait 1–2 minutes and refresh. If still absent, verify the deployment succeeded (Step 1f-i) and that the resource group is `rg-soclab`.
+
+**Notes:**
+- The Sentinel connection (`azuresentinel-zava`) uses managed identity and requires no manual authorization.
+- The Office 365 connection (`office365-zava`) uses delegated OAuth and **must** be authorized manually (Step 1f-iv) before students reach Exercise 03.02. An unauthorized connection causes the playbook to fail at Step 4.
+- ⚠️ **Blob name mismatch check:** the ARM template targets `trusted-report.docx` (matching the Exercise 03 narrative). `plant_poisoned_doc.py` (STEP 6b) uploads `trusted-report.txt`. Verify which name the script actually uploads by running `az storage blob list --account-name stsoclabtgu35glfngjhc -c grounding --auth-mode login -o table` after Step 6b. If the name is `.txt`, update `variables.blobToDelete` in `zava-contain-crosslayer.json` from `trusted-report.docx` to `trusted-report.txt` and redeploy (re-run Step 1f-i).
+
+---
+
 ### STEP 2 — Run Post-Deploy Scripts
 
 ⚠️ **ORDERING IS CRITICAL. Follow exactly:**
@@ -404,7 +495,7 @@ The Defender for Cloud jailbreak alert appears within **15–30 minutes** as a s
 ```
 python plant_poisoned_doc.py
 ```
-Uploads `trusted-report.txt` to the `grounding` blob container. This simulates a poisoned document in the Azure OpenAI grounding data store.
+Uploads `trusted-report.docx` to the `grounding` blob container. This simulates a poisoned document in the Azure OpenAI grounding data store. If `python-docx` is not installed on the setup machine, the script falls back to uploading `trusted-report.txt` instead — in that case, update `variables.blobToDelete` in `setup/zava-contain-crosslayer.json` from `.docx` to `.txt` and redeploy Step 1f-i before students arrive.
 
 ---
 
@@ -518,6 +609,17 @@ Defender XDR workspace connections are tenant-level and survive resource group d
 3. Find the workspace matching `$WsName` → three-dot menu → **Disconnect workspace** → Confirm
 
 ⚠️ If you skip this step, the deleted workspace entry persists in Defender as a stale Connected workspace pointing at a gone resource.
+
+### Step 4b.5 — Remediate Logic App playbook side effects (if playbook was run during the lab)
+
+If any student triggered the `Zava-Contain-CrossLayer` automation rule during Exercise 03.02, the playbook may have left the following state changes that survive resource group deletion and will affect the next rebuild:
+
+**Check if OpenAI network access was restricted (by Step 5 of the playbook, if a student approved the isolation action):**
+The OpenAI resource is in `rg-soclab` and will be deleted in Step 4c below — no action needed. The network restriction disappears with the resource.
+
+**Note on sp-refund-agent-inference:** The playbook's Step 2 is a Compose (acknowledged) action and does not disable the SP. If the SP was disabled during the lab it was done manually in Task 03.01 — check and re-enable before re-seeding (HOW_TO_RESEED.md § Prerequisites covers this).
+
+**Note:** The `Zava-Contain-CrossLayer` Logic App and its API connections (`azuresentinel-zava`, `office365-zava`) are all in `rg-soclab` and are automatically deleted in Step 4c. No separate deletion step is required.
 
 ### Step 4c — Delete the resource group
 ```powershell
