@@ -464,6 +464,18 @@ To purge the app registration from soft-delete (optional):
 Remove-MgDirectoryDeletedItemAsApplication -DirectoryObjectId (Get-MgDirectoryDeletedItem -DirectoryObjectId (Get-MgDirectoryDeletedItemAsApplication | Where-Object { $_.DisplayName -eq "sp-refund-agent-inference" }).Id)
 ```
 
+**Step 0e — Re-enable Security Defaults**
+
+`provision_lab_identities.ps1` disables Security Defaults to allow the password-only Tor sign-in. If you want to restore the tenant to its original posture after a full teardown, re-enable it:
+
+```powershell
+Invoke-MgGraphRequest -Method PATCH -Uri "https://graph.microsoft.com/v1.0/policies/identitySecurityDefaultsEnforcementPolicy" -Body '{"isEnabled": true}' -ContentType "application/json"
+```
+
+Confirm: `(Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/policies/identitySecurityDefaultsEnforcementPolicy?`$select=isEnabled").isEnabled` — expected: `True`
+
+⚠️ Re-enabling Security Defaults will block the Tor sign-in on the next hydration run. The provision script will detect and disable it again automatically (Part 0), so this step is safe to perform between cycles.
+
 ⚠️ After Step 0, re-run `provision_lab_identities.ps1` (Tenant Hydration § H1–H3) before the next lab build to re-create these objects and re-trigger the risk detection.
 
 ### Step 1 — Disable all analytics rules
