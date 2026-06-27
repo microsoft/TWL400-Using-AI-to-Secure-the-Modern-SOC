@@ -174,7 +174,7 @@ The script queries `az monitor log-analytics workspace list -g rg-soclab` and fo
 ```
 python add_entity_mappings.py
 ```
-Applies the KQL query, MITRE tactics, suppression (PT24H), SingleAlert grouping, and entity mappings to the "SOC Lab — cross-layer attack" analytics rule. The query emits **one row per attack stage** (1-Identity → 5-Endpoint, gated on ≥3 stages for the same account) and maps **5 entities** — Account×2 (user + service principal), Host (endpoint), AzureResource (AI resource), and MailMessage (phishing email), which is Sentinel's per-rule maximum. These aggregate into one incident whose graph spans user, service principal, AI resource, endpoint, and email.
+Applies the KQL query, MITRE tactics, entity mappings, and incident grouping to the "SOC Lab — cross-layer attack" analytics rule, and **deploys it disabled** (Step 5 enables it). The query emits **one row per attack stage** (1-Identity → 5-Endpoint, gated on ≥3 stages for the same account) and maps **5 entities** — Account×2 (user + service principal), Host (endpoint), AzureResource (AI resource), and MailMessage (phishing email), Sentinel's per-rule maximum. Incident grouping is **AnyAlert** — every firing of this rule collapses into a single incident — and there is **no suppression**. The result is one incident whose graph spans user, service principal, AI resource, endpoint, and email.
 
 **2c. Create the 25 noise analytics rules:**
 ```
@@ -254,10 +254,12 @@ Confirm the toggle saved before proceeding.
 
 ### STEP 5 — Activate Incidents
 
-**5a. Force analytics rules to fire:**
+**5a. Enable and force analytics rules to fire:**
 ```
+python update_rule_frequency.py --enable --all
 python update_rule_frequency.py PT5M --all
 ```
+(The cross-layer rule deploys disabled, so `--enable --all` is required before it will fire.)
 
 Wait 5–10 minutes for incidents to appear in the Defender portal.
 
@@ -269,24 +271,14 @@ Incidents queue → filter Status = **New + In Progress**
 
 Expected: ~26 incidents (25 noise + 1 cross-layer attack).
 
-**5c. Reset rule frequency then disable:**
+**5c. Disable the rules:**
 ```
-python update_rule_frequency.py PT1H --all
 python update_rule_frequency.py --disable --all
 ```
 
-⚠️ Disabling rules after incidents are created prevents duplicate incident generation on subsequent rule cycles. Rules must be re-enabled before any re-seed.
+⚠️ Disabling rules after incidents are created prevents duplicate incident generation on subsequent rule cycles. No need to reset the frequency first — a disabled rule doesn't fire regardless of its PT5M/PT1H setting. Rules must be re-enabled before any re-seed.
 
-**Before re-seeding (any time after initial setup):**
-```
-python update_rule_frequency.py --enable --all
-python update_rule_frequency.py PT5M --all
-```
-Wait for incidents, then:
-```
-python update_rule_frequency.py PT1H --all
-python update_rule_frequency.py --disable --all
-```
+**To re-seed later (any time after initial setup):** follow the **How to Re-seed the Lab** section at the end of this runbook.
 
 ---
 
@@ -328,14 +320,13 @@ Verify in Defender portal → Incidents (Status = New + In Progress).
 
 Run ONE STEP AT A TIME. Confirm each step before proceeding.
 
-### Step 1 — Re-enable and slow all analytics rules
+### Step 1 — Disable all analytics rules
 ```
-python update_rule_frequency.py --enable --all
-python update_rule_frequency.py PT1H --all
+python update_rule_frequency.py --disable --all
 ```
-Re-enable first in case rules were disabled during the build (Step 5c). Then slow to PT1H.
+Ensure every rule is disabled before cleanup so nothing re-fires while you delete incidents. (`--disable` is idempotent — safe whether the rules were enabled or already off.)
 
-⚠️ Always run this before cleanup. Rules firing at PT5M regenerate incidents faster than cleanup can delete them.
+⚠️ Always run this before cleanup. An enabled rule regenerates incidents faster than cleanup can delete them; disabling stops that entirely.
 
 ### Step 2 — Delete all Sentinel incidents
 ```
@@ -439,4 +430,53 @@ The Logs query interface opens in Simple mode. KQL queries will not work until t
 Expected. No action needed if the plan was enabled before `seed_ai_attacks.py` ran.
 
 **Incidents filter**
-Always set Status = **New + In Progress** in the Defender incidents queue. 
+Always set Status = **New + In Progress** in the Defender incidents queue. This hides all Resolved incidents from prior lab runs. Defender uses "New", "In Progress", and "Resolved" — there is no "Active" status.
+
+**PowerShell line continuation**
+Never use backtick (`` ` ``) line continuation in PowerShell commands. Always write commands as a single line.
+
+---
+
+## SCRIPTS REFERENCE
+
+| Script | Purpose | When to run |
+|--------|---------|-------------|
+| `seed_events.py` | Seeds 5 attack + 25 noise events into `SocLabEvents_CL`, with typed entity columns (Sender/Recipient/Subject/NetworkMessageId, AzureResourceId, ServicePrincipal) on the attack stages; substitutes `{DOMAIN}` and `{SUBSCRIPTION}` at runtime | Every build, FIRST before other scripts |
+| `seed_events.ps1` | Same as above, PowerShell | Every build |
+| `add_entity_mappings.py` | Builds/patches the cross-layer attack rule: per-stage KQL, MITRE tactics, PT24H suppression, SingleAlert grouping, and 5 entity mappings (Account×2, Host, AzureResource, MailMessage) | Every build, after seed_events |
+| `setup_noise_rules.py` | Creates 25 analytics rules (one per noise event) | Every build, after seed_events |
+| `setup_cleanup_app.py` | Creates XDR cleanup app registration + credentials file | Every build |
+| `seed_ai_attacks.py` | Sends jailbreak prompts to Azure OpenAI | Every build, after AI workloads enabled |
+| `plant_poisoned_doc.py` | Uploads trusted-report.txt to grounding blob container | Every build |
+| `update_rule_frequency.py` | Changes frequency or enables/disables analytics rules | PT5M to force fire; PT1H to reset; --disable after incidents created; --enable before re-seed |
+| `cleanup_incidents.py` | Deletes all "SOC Lab —" Sentinel incidents | Teardown Step 2 |
+| `cleanup_xdr_incidents.py` | Resolves all Defender XDR incidents | Teardown Step 3 |
+| `save_to_github.py` | Commits and pushes all changes to GitHub | After any session with file changes |
+
+---
+
+## How to Re-seed the Lab
+
+*(Also kept as the standalone `HOW_TO_RESEED.md`.)*
+
+**The one thing to internalize:** `cleanup_incidents.py` deletes incidents, but **not** the events that feed them. Events persist in `SocLabEvents_CL` (fuel); analytics rules are generators that manufacture incidents whenever they're **enabled** and matching fuel is in their lookback window. So **incidents only stay gone while the rules are disabled** — cleanup + rules off = clean; cleanup + rules on = they regenerate instantly. A re-seed is just: **disable → wipe incidents → seed fresh → enable for one batch → disable to freeze.** Never enable except right after seeding. (Accumulating fuel is harmless — the cross-layer rule counts *distinct* stages, and grouping merges duplicate noise rows.)
+
+Run one step at a time, from the setup folder, with `az` signed in:
+
+```
+python update_rule_frequency.py --disable --all      # 1. generators OFF
+python add_entity_mappings.py                         # 2. ONLY if a rule definition changed (deploys disabled)
+python cleanup_incidents.py                           # 3. wipe incidents (repeat until "cleanup complete")
+.\seed_events.ps1 -Domain <tenant-domain>             # 4. fresh fuel (30 events)
+python update_rule_frequency.py --enable --all        # 5. generators ON
+python update_rule_frequency.py PT5M --all            #    force a fast cycle
+                                                      # 6. wait ~5-10 min; verify ~26 incidents in Defender
+python update_rule_frequency.py --disable --all       # 7. freeze the batch — do NOT skip
+```
+
+Optional after step 4: `python seed_ai_attacks.py` + `python plant_poisoned_doc.py` for the AI jailbreak alert (separate incident, 15–30 min). No frequency reset is needed at step 7 — a disabled rule doesn't fire regardless of PT5M/PT1H.
+
+---
+
+*Variant 4: Azure / Sentinel / Defender XDR / Security Copilot. Purview DSPM removed (retiring Sep 30, 2026).*
+*Maintainer: Dan Beckett, Solliance/ideola*

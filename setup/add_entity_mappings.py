@@ -48,9 +48,9 @@ attack
     Account          = Account_s,
     SourceIP         = column_ifexists("SourceIP_s", ""),
     Device           = column_ifexists("Device_s", ""),
-    Sender           = column_ifexists("Sender_s", ""),
     Recipient        = column_ifexists("Recipient_s", ""),
     NetworkMessageId = column_ifexists("NetworkMessageId_s", ""),
+    Subject          = column_ifexists("Subject_s", ""),
     AzureResourceId  = column_ifexists("AzureResourceId_s", ""),
     ServicePrincipal = column_ifexists("ServicePrincipal_s", "")"""
 
@@ -90,9 +90,9 @@ ENTITY_MAPPINGS = [
     {
         "entityType": "MailMessage",
         "fieldMappings": [
+            {"identifier": "NetworkMessageId", "columnName": "NetworkMessageId"},
             {"identifier": "Recipient", "columnName": "Recipient"},
-            {"identifier": "Sender", "columnName": "Sender"},
-            {"identifier": "NetworkMessageId", "columnName": "NetworkMessageId"}
+            {"identifier": "Subject", "columnName": "Subject"}
         ]
     }
 ]
@@ -100,16 +100,27 @@ ENTITY_MAPPINGS = [
 RULE_PROPERTIES = {
     "displayName":          DISPLAY_NAME,
     "description":          "Correlates the seeded cross-layer attack stages into one incident, emitting per-stage entities (user, attacker IP, phishing email, AI resource, service principal, endpoint).",
-    "enabled":              True,
+    "enabled":              False,
     "severity":             "Medium",
     "query":                UPDATED_QUERY,
     "queryFrequency":       "PT1H",
     "queryPeriod":          "PT4H",
     "triggerOperator":      "GreaterThan",
     "triggerThreshold":     0,
-    "suppressionEnabled":   True,
+    "suppressionEnabled":   False,
     "suppressionDuration":  "PT24H",
-    "incidentConfiguration": {"createIncident": True},
+    "incidentConfiguration": {
+        "createIncident": True,
+        "groupingConfiguration": {
+            "enabled":              True,
+            "reopenClosedIncident": False,
+            "lookbackDuration":     "PT5H",
+            "matchingMethod":       "AnyAlert",
+            "groupByEntities":      [],
+            "groupByAlertDetails":  [],
+            "groupByCustomDetails": []
+        }
+    },
     "eventGroupingSettings": {"aggregationKind": "SingleAlert"},
     "entityMappings":       ENTITY_MAPPINGS,
     "tactics":              TACTICS,
@@ -204,4 +215,30 @@ def main():
     rules = json.loads(rules_json)["value"]
 
     existing = next(
-        (r for r in rules if RU
+        (r for r in rules if RULE_KEYWORD in r["properties"].get("displayName", "")),
+        None
+    )
+
+    if existing:
+        print(f"Found existing rule: {existing['properties']['displayName']}")
+        print("Patching...")
+        for field in ["lastModifiedUtc", "createdTimeUtc", "lastModifiedBy", "createdBy"]:
+            existing["properties"].pop(field, None)
+        existing["properties"].update(RULE_PROPERTIES)
+        updated = put_rule(existing, existing["id"])
+        print("Rule updated successfully.")
+    else:
+        print("No existing rule found — creating from scratch...")
+        rule_resource_id = (
+            f"{workspace_resource_id}"
+            f"/providers/Microsoft.SecurityInsights/alertRules/{rule_id}"
+        )
+        rule_body = {"kind": "Scheduled", "properties": RULE_PROPERTIES}
+        updated = put_rule(rule_body, rule_resource_id)
+        print(f"Rule created successfully (ID: {rule_id}).")
+
+    print_result(updated)
+
+
+if __name__ == "__main__":
+    main()

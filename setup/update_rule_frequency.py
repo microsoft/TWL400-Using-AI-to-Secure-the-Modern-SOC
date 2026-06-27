@@ -97,14 +97,12 @@ def update_rule(rule, new_frequency):
 
 def set_rule_enabled(rule, enabled):
     display_name = rule["properties"]["displayName"]
-    current      = rule["properties"].get("enabled", True)
     state_str    = "enabled" if enabled else "disabled"
 
-    if current == enabled:
-        print(f"  {display_name[:60]}")
-        print(f"    Already {state_str} — skipped.")
-        return
-
+    # Always PUT the target state. ARM read-after-write is eventually consistent,
+    # so deciding whether to act based on the fetched 'enabled' value can skip a
+    # change that's actually needed (e.g. re-enabling a rule that was just disabled,
+    # where the GET still returns the stale pre-disable value).
     rule["properties"]["enabled"] = enabled
     put_rule(rule)
     print(f"  {display_name[:60]}")
