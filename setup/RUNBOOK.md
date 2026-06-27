@@ -6,6 +6,58 @@
 
 ---
 
+## TECHNICIAN PREREQUISITES
+
+Install and verify all of the following on the setup technician's machine **before** beginning any build or hydration procedure.
+
+### Required tools
+
+**Azure CLI (`az`)**
+Install: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
+Verify: `az version`
+Must be signed in and set to the lab subscription:
+```powershell
+az login
+az account set --subscription 5c07e542-68ae-47ff-97cd-a6b3777b4fe1
+az account show --query "{sub:id,tenant:tenantId}" -o table
+```
+
+**PowerShell 5.1 or later**
+Ships with Windows 10/11. Verify: `$PSVersionTable.PSVersion`
+Required for: `provision_lab_identities.ps1`, `seed_events.ps1`
+
+**Microsoft Graph PowerShell modules**
+```powershell
+Install-Module Microsoft.Graph.Users, Microsoft.Graph.Groups, Microsoft.Graph.Applications, Microsoft.Graph.Identity.DirectoryManagement -Scope CurrentUser -Force
+```
+Note: the full `Microsoft.Graph` meta-module is not required and is much slower to install. Install only the four modules above.
+
+**Python 3.8 or later**
+Install: https://www.python.org/downloads/
+Verify: `python --version`
+All lab scripts use the standard library only — no `pip install` required.
+
+**Git**
+Install: https://git-scm.com/
+Verify: `git --version`
+
+### One-time tools (Tenant Hydration only)
+
+**Tor Browser**
+Required once to trigger the `anonymousIpAddress` risk detection for Mariya Petrova (TENANT HYDRATION § H2). Not needed for routine rebuilds unless her risk state was remediated.
+Install: https://www.torproject.org/download/
+
+### Required access
+
+| What | Minimum role |
+|------|-------------|
+| Azure subscription `acesa-soc-development` | Owner or User Access Administrator |
+| Entra ID tenant `AcesaDev.onmicrosoft.com` | Global Administrator (for tenant hydration); Security Administrator sufficient for routine rebuilds |
+| Defender XDR portal | Security Administrator |
+| Security Copilot | Security Administrator + Owner on the `law-soclab` workspace |
+
+---
+
 ## Lab Environment Reference
 
 | Item | Value |
@@ -29,6 +81,9 @@ These items are **tenant-level** and survive teardowns — do not delete them:
 - Security Copilot workspace (`law-soclab`)
 - Defender XDR tenant configuration
 - Entra ID app registrations (unless explicitly listed in teardown)
+- Entra ID user `mariya.petrova@AcesaDev.onmicrosoft.com` (Exercise 02 identity)
+- Entra ID app registration + service principal `sp-refund-agent-inference` (Exercise 02 identity)
+- Entra ID security group `AI-Infrastructure-Owners` (Exercise 02 sensitive group)
 
 These items are **per-deployment** and are deleted/recreated each cycle:
 - Resource group `rg-soclab` and everything in it
@@ -36,6 +91,59 @@ These items are **per-deployment** and are deleted/recreated each cycle:
 - Azure OpenAI resource (`oai-soclab-v##`)
 - Security Copilot capacity (`scu-soclab`)
 - XDR cleanup app registration (`SOC Lab — XDR Cleanup`)
+
+---
+
+## TENANT HYDRATION (one-time — not repeated per rebuild)
+
+These steps provision Entra ID objects that Defender for Identity needs to surface an identity timeline in Exercise 02, Task 02.02. They are **not per-deployment** — run once per tenant and skip on subsequent rebuilds unless the objects were deleted.
+
+### H1 — Run the provisioning script
+
+```powershell
+.\provision_lab_identities.ps1
+```
+
+This script (idempotent — safe to re-run) creates:
+- Disables Security Defaults (required for password-only Tor sign-in; this tenant has no CA policies)
+- User `mariya.petrova@AcesaDev.onmicrosoft.com` with E5 license (Finance & Operations persona)
+- App registration + service principal `sp-refund-agent-inference`
+- Client secret for the SP (printed once to console — save it)
+- Reader + Cognitive Services User roles on `rg-soclab` for the SP
+- Security group `AI-Infrastructure-Owners` with the SP as a member
+- 4 baseline ARM read calls under the SP's credentials (behavioral baseline for DFI)
+
+**Required modules:** `Microsoft.Graph.Users`, `Microsoft.Graph.Groups`, `Microsoft.Graph.Applications`, `Microsoft.Graph.Identity.DirectoryManagement` (no Az module needed -- role assignments use az CLI)
+**Required permissions:** Graph — `User.ReadWrite.All`, `Group.ReadWrite.All`, `Application.ReadWrite.All`, `Directory.ReadWrite.All`, `Policy.ReadWrite.ConditionalAccess`; Azure — Owner or User Access Administrator on subscription `acesa-soc-development`
+
+### H2 — Trigger anonymousIpAddress risk detection (manual)
+
+Entra ID Protection classifies sign-ins from Tor exit nodes as `anonymousIpAddress` risk events. This step cannot be automated.
+
+1. Install Tor Browser: https://www.torproject.org/download/
+2. Connect to the Tor network.
+3. Navigate to: https://myapps.microsoft.com
+4. Sign in as `mariya.petrova@AcesaDev.onmicrosoft.com` (password printed by script in H1).
+5. Complete MFA if prompted. (If no MFA method is registered and CA blocks sign-in, register one via portal.azure.com → Users → mariya.petrova → Authentication methods first.)
+
+Detection propagates in 5–15 minutes. If Tor exit node IPs are not yet flagged, retry with a second Tor sign-in.
+
+### H3 — Confirm detection (manual)
+
+1. Azure portal → Microsoft Entra ID → Security → **Identity Protection → Risky sign-ins**
+2. Filter: User = `mariya.petrova`
+3. Expected: risk event type = **Anonymous IP address**, level = Medium or High.
+4. Optional: Entra ID Protection → **Risky users** → Mariya Petrova → **Confirm user compromised** (escalates to High; richer DFI timeline).
+
+KQL verification (Log Analytics, allow ~24 h for full propagation):
+```kql
+AADUserRiskEvents
+| where UserPrincipalName == "mariya.petrova@AcesaDev.onmicrosoft.com"
+| where RiskEventType == "anonymousIpAddress"
+| project TimeGenerated, RiskEventType, RiskLevel, IpAddress, Location
+```
+
+⚠️ Risk detections require an Entra ID P2 or E5 license on the user. The script assigns one; confirm under the user's Licenses blade if the detection does not appear.
 
 ---
 
@@ -278,7 +386,7 @@ python update_rule_frequency.py --disable --all
 
 ⚠️ Disabling rules after incidents are created prevents duplicate incident generation on subsequent rule cycles. No need to reset the frequency first — a disabled rule doesn't fire regardless of its PT5M/PT1H setting. Rules must be re-enabled before any re-seed.
 
-**To re-seed later (any time after initial setup):** follow the **How to Re-seed the Lab** section at the end of this runbook.
+**To re-seed later (any time after initial setup):** follow the steps in **`HOW_TO_RESEED.md`** (in this same `setup/` folder). Note: `seed_ai_attacks.py` and `plant_poisoned_doc.py` are required steps in that procedure — not optional — and Defender for Cloud AI workloads must be **On** before running `seed_ai_attacks.py`.
 
 ---
 
@@ -288,7 +396,7 @@ python update_rule_frequency.py --disable --all
 ```
 python seed_ai_attacks.py
 ```
-Expected: `Responded: 3 | Blocked: 4 | Errors: 0`
+Expected: `Responded: 2–3 | Blocked: 4–5 | Errors: 0` (ratio varies — Azure's content filter is non-deterministic and updated periodically; what matters is Errors: 0)
 
 The Defender for Cloud jailbreak alert appears within **15–30 minutes** as a separate incident.
 
@@ -319,6 +427,44 @@ Verify in Defender portal → Incidents (Status = New + In Progress).
 ## TEARDOWN PROCEDURE
 
 Run ONE STEP AT A TIME. Confirm each step before proceeding.
+
+### Step 0 — Remove lab identity objects (optional — only if doing a full tenant reset)
+
+⚠️ These objects are **persistent** (not per-deployment). Only remove them if you want a complete clean slate. Skip this step for routine rebuilds.
+
+**Step 0a — Dismiss Mariya's risk state**
+
+Before deleting the user, dismiss any open risk detections so they don't linger as orphaned entries.
+
+1. Azure portal → Microsoft Entra ID → Security → Identity Protection → **Risky users**
+2. Find Mariya Petrova → three-dot menu → **Dismiss user risk**
+
+**Step 0b — Delete Mariya Petrova**
+```powershell
+Remove-MgUser -UserId (Get-MgUser -Filter "userPrincipalName eq 'mariya.petrova@AcesaDev.onmicrosoft.com'").Id
+```
+This soft-deletes the user. To permanently purge (frees the UPN immediately):
+```powershell
+Remove-MgDirectoryDeletedItemAsUser -DirectoryObjectId (Get-MgDirectoryDeletedItemAsUser | Where-Object { $_.UserPrincipalName -eq "mariya.petrova@AcesaDev.onmicrosoft.com" }).Id
+```
+
+**Step 0c — Delete the AI-Infrastructure-Owners group**
+```powershell
+Remove-MgGroup -GroupId (Get-MgGroup -Filter "displayName eq 'AI-Infrastructure-Owners'").Id
+```
+
+**Step 0d — Delete the sp-refund-agent-inference app registration (also removes SP)**
+```powershell
+Remove-MgApplication -ApplicationId (Get-MgApplication -Filter "displayName eq 'sp-refund-agent-inference'").Id
+```
+Deleting the app registration automatically soft-deletes the associated service principal and removes all role assignments. No separate SP deletion needed.
+
+To purge the app registration from soft-delete (optional):
+```powershell
+Remove-MgDirectoryDeletedItemAsApplication -DirectoryObjectId (Get-MgDirectoryDeletedItem -DirectoryObjectId (Get-MgDirectoryDeletedItemAsApplication | Where-Object { $_.DisplayName -eq "sp-refund-agent-inference" }).Id)
+```
+
+⚠️ After Step 0, re-run `provision_lab_identities.ps1` (Tenant Hydration § H1–H3) before the next lab build to re-create these objects and re-trigger the risk detection.
 
 ### Step 1 — Disable all analytics rules
 ```
@@ -441,6 +587,7 @@ Never use backtick (`` ` ``) line continuation in PowerShell commands. Always wr
 
 | Script | Purpose | When to run |
 |--------|---------|-------------|
+| `provision_lab_identities.ps1` | Creates Mariya Petrova (user + E5 license), `sp-refund-agent-inference` (app reg + SP + roles + group membership), baseline ARM calls; prints manual Tor sign-in instructions | **Once per tenant** (Tenant Hydration § H1). Re-run only if identity objects were deleted (Step 0 teardown). |
 | `seed_events.py` | Seeds 5 attack + 25 noise events into `SocLabEvents_CL`, with typed entity columns (Sender/Recipient/Subject/NetworkMessageId, AzureResourceId, ServicePrincipal) on the attack stages; substitutes `{DOMAIN}` and `{SUBSCRIPTION}` at runtime | Every build, FIRST before other scripts |
 | `seed_events.ps1` | Same as above, PowerShell | Every build |
 | `add_entity_mappings.py` | Builds/patches the cross-layer attack rule: per-stage KQL, MITRE tactics, PT24H suppression, SingleAlert grouping, and 5 entity mappings (Account×2, Host, AzureResource, MailMessage) | Every build, after seed_events |

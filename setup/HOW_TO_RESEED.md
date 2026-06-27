@@ -23,6 +23,8 @@ A re-seed is therefore just: **turn the generators off → wipe the output → a
 - `az` CLI signed in, on the lab subscription (`acesa-soc-development`). Confirm: `az account show -o table`.
 - Run every command from the setup folder (where the scripts live).
 - Know your tenant domain (e.g. `AcesaDev.onmicrosoft.com`).
+- **Identity objects exist.** Verify that `mariya.petrova@AcesaDev.onmicrosoft.com` and the `sp-refund-agent-inference` service principal are present in the tenant (portal.azure.com → Microsoft Entra ID → Users / App registrations). If either is missing, run `provision_lab_identities.ps1` (see RUNBOOK.md § TENANT HYDRATION) before continuing.
+- **Mariya has an active `anonymousIpAddress` risk event.** Check: Entra ID Protection → Risky users → find Mariya Petrova → Risk state should not be **Remediated** or **Dismissed**. If her risk was cleared since the last lab run (e.g. a Global Admin dismissed it), re-trigger the detection by signing in as Mariya from Tor Browser before students reach Exercise 02.02. See RUNBOOK.md § H2–H3 for the exact procedure.
 
 ## Procedure
 
@@ -44,15 +46,29 @@ python cleanup_incidents.py
 ```
 Re-run until "No more matching incidents — cleanup complete." With the rules off, the queue now *stays* empty.
 
-**4. Add fresh fuel.**
+**4. Add fresh fuel — SocLabEvents_CL.**
 ```
 .\seed_events.ps1 -Domain AcesaDev.onmicrosoft.com
 ```
 Expect `HTTP 200 -- all events posted OK` (30 events).
 
-> Optional: `python seed_ai_attacks.py` and `python plant_poisoned_doc.py` to (re)generate the AI jailbreak alert + grounding doc (a separate incident, 15–30 min).
+**5. Seed the AI jailbreak attack.**
 
-**5. Turn the generators on and force one fast cycle.**
+> ⚠️ Prerequisite: Defender for Cloud AI workloads must be **On** before running this. Check: Azure portal → **Microsoft Defender for Cloud** → **Environment settings** → select the subscription → **Defender plans** → **AI workloads** = On. If it is off, the script succeeds but no alert is generated.
+
+```
+python seed_ai_attacks.py
+```
+Expected: `Responded: 2–3 | Blocked: 4–5 | Errors: 0`. The Defender for Cloud jailbreak alert appears as a **separate incident** within **15–30 minutes** — it is not part of the cross-layer attack incident.
+
+> **Note on Responded/Blocked variance:** Several prompts land near Azure's content-filter threshold. The filter's ML models are non-deterministic and updated periodically, so the same prompt can flip between responded and blocked between runs. The ratio doesn't matter for the lab — Defender for Cloud sees the traffic and raises the alert regardless of whether individual prompts were blocked or answered.
+
+**6. Plant the poisoned grounding document.**
+```
+python plant_poisoned_doc.py
+```
+
+**7. Turn the generators on and force one fast cycle.**
 ```
 python update_rule_frequency.py --enable --all
 ```
@@ -60,9 +76,9 @@ python update_rule_frequency.py --enable --all
 python update_rule_frequency.py PT5M --all
 ```
 
-**6. Wait ~5–10 minutes**, then verify in Defender (Incidents, Status = **New + In Progress**): ~26 incidents (≈25 noise + 1 cross-layer), plus the jailbreak if you seeded it.
+**8. Wait ~5–10 minutes**, then verify in Defender (Incidents, Status = **New + In Progress**): ~26 incidents (≈25 noise + 1 cross-layer). The jailbreak alert arrives separately within 15–30 minutes of Step 5.
 
-**7. Freeze the batch — turn the generators off.**
+**9. Freeze the batch — turn the generators off.**
 ```
 python update_rule_frequency.py --disable --all
 ```
