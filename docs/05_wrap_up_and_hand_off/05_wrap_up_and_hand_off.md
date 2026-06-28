@@ -36,7 +36,9 @@ The **Proof Through Scenario** is the empirical centerpiece you hand to the rest
 
 ## Lab environment cleanup
 
-None required. This lab runs in a hosted tenant, and the seeded telemetry is torn down and re-seeded by a sub-5-minute scripted reset between cohorts. There is no real device or learner-owned resource to delete — the injected `SocLabEvents_CL` events, the decoy incidents, and the planted grounding doc are all re-created by the seeder.
+None required for learners. The injected `SocLabEvents_CL` events and the planted grounding doc (`trusted-report.docx`) are managed by a scripted reset that re-seeds them between cohorts — there is no learner-owned resource to delete.
+
+The ~25 decoy incidents and the real Microsoft Defender for Cloud — AI threat protection alert in `SecurityAlert` are native tenant artifacts; they persist across cohorts and do not need to be reset.
 
 ## Further learning
 

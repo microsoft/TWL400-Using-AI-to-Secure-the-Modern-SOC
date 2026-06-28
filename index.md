@@ -8,16 +8,13 @@ nav_order: 1
 
 **Cross-Layer Attack Lab (End-to-End)**
 
-{: .important }
-> **Draft.** This lab was authored from the design outline ahead of the lab tenant build. Portal navigation, KQL, Security Copilot prompts, screenshots, and the seeded entities (users, devices, the AI app, the poisoned document) are **illustrative** and will be validated against the provisioned environment during the build.
-
 This hands-on lab is the practical core of **Module 3** of the *Using AI to Secure the Modern SOC* workshop. While the surrounding modules reason about AI threats, architecture, SOC operations, and executive value on a whiteboard, this module puts you in a **live tenant** to investigate and respond to a coordinated, AI-driven attack in real Microsoft tooling — and to produce the module's executive deliverable, the **Proof Through Scenario**, that feeds Modules 4 and 5.
 
 ## Scenario
 
 You are a security Cloud Solution Architect advising **Zava**, a large enterprise scaling AI from pilots to production on a heavy but fragmented Microsoft security investment. Zava's SOC is understaffed and buried under alert volume — its analysts are **drowning in alerts**, with roughly **25 real-looking incidents** in the queue (routine risky sign-ins, benign DLP hits, commodity malware, failed-logon bursts, impossible-but-benign travel) on any given shift.
 
-Over a short window, a coordinated AI-driven attack has moved across **identity, AI, data, infrastructure, and endpoint**. Each signal is individually low-risk — an impossible-travel sign-in, a phishing email, a saved "policy update," some inference traffic, an endpoint script — lands in a different console, and is **randomly interspersed among the ~25 decoy incidents**. From the SOC's view nothing stands out. In reality, the **Zava Refund Agent** — a real Azure OpenAI endpoint — and the infrastructure behind it have been compromised.
+Over a short window, a coordinated AI-driven attack has moved across **identity, data/AI grounding, AI, infrastructure, and endpoint**. Each signal is individually low-risk — an anonymous IP sign-in, a phishing email, a saved "policy update," some inference traffic, an endpoint script — lands in a different console, and is **randomly interspersed among the ~25 decoy incidents**. From the SOC's view nothing stands out. In reality, the **Zava Refund Agent** — a real Azure OpenAI endpoint — and the infrastructure behind it have been compromised.
 
 You are brought in to prove what happened, show why detection failed, and demonstrate the AI-driven SecOps response that should have fired. The lab rewards **system-level SecOps judgment** — correlating signals across layers and recognizing where telemetry and automation gaps let the chain through — not single-product feature clicks.
 
@@ -42,7 +39,7 @@ You are brought in to prove what happened, show why detection failed, and demons
 | Lab credentials | A pre-provisioned, Azure-capable Zava tenant account, supplied by your facilitator |
 | Browser | A current Microsoft Edge or Chrome browser — no VM or local install required |
 | Microsoft 365 / Security licensing | Provisioned in the lab tenant: Microsoft 365 E5, Security Copilot (SCUs), Defender XDR, Entra ID Protection / Conditional Access |
-| Azure subscription components | Provisioned and pre-seeded in the lab tenant: Microsoft Sentinel + Log Analytics workspace, an Azure OpenAI endpoint (the Zava Refund Agent — Azure AI Foundry project `refund-agent-prod`, `gpt-4o` deployment), and Microsoft Defender for Cloud — AI threat protection enabled on it |
+| Azure subscription components | Provisioned and pre-seeded in the lab tenant: Microsoft Sentinel + Log Analytics workspace, an Azure OpenAI endpoint (the Zava Refund Agent — `oai-soclab-v02`, `gpt-4o` deployment), and Microsoft Defender for Cloud — AI threat protection enabled on it |
 | Background (recommended) | Familiarity with Defender XDR incidents, KQL basics, and the idea of RAG-grounded AI apps. Modules 1–2 of the workshop provide the conceptual grounding. |
 
 {: .note }
