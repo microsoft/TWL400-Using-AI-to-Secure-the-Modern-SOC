@@ -22,12 +22,12 @@ You are brought in to prove what happened, show why detection failed, and demons
 
 | # | Exercise | Duration |
 |---|----------|----------|
-| 00 | [Access Your Lab Environment](docs/00_lab_environment/00_lab_environment.html) | ~10–15 min |
-| 01 | [Triage & Scope the Cross-Layer Incident](docs/01_triage_and_scope/01_triage_and_scope.html) | ~20 min |
-| 02 | [Reconstruct the Attack Lifecycle Across Layers](docs/02_reconstruct_the_lifecycle/02_reconstruct_the_lifecycle.html) | ~25 min |
-| 03 | [Design & Execute the Coordinated Response](docs/03_coordinated_response/03_coordinated_response.html) | ~25 min |
-| 04 | [Proof Through Scenario — Visualize the Attack & Failure Points](docs/04_proof_through_scenario/04_proof_through_scenario.html) | ~15 min |
-| 05 | [Wrap-Up & Hand-Off](docs/05_wrap_up_and_hand_off/05_wrap_up_and_hand_off.html) | <15 min (or post-delivery) |
+| 00 | [Access Your Lab Environment](docs/00_lab_environment/00_lab_environment.html){:target="_blank"} | ~10–15 min |
+| 01 | [Triage & Scope the Cross-Layer Incident](docs/01_triage_and_scope/01_triage_and_scope.html){:target="_blank"} | ~20 min |
+| 02 | [Reconstruct the Attack Lifecycle Across Layers](docs/02_reconstruct_the_lifecycle/02_reconstruct_the_lifecycle.html){:target="_blank"} | ~25 min |
+| 03 | [Design & Execute the Coordinated Response](docs/03_coordinated_response/03_coordinated_response.html){:target="_blank"} | ~25 min |
+| 04 | [Proof Through Scenario — Visualize the Attack & Failure Points](docs/04_proof_through_scenario/04_proof_through_scenario.html){:target="_blank"} | ~15 min |
+| 05 | [Wrap-Up & Hand-Off](docs/05_wrap_up_and_hand_off/05_wrap_up_and_hand_off.html){:target="_blank"} | <15 min (or post-delivery) |
 
 {: .note }
 > Durations are proposed and will be finalized against the parent workshop's timing design.
@@ -45,6 +45,6 @@ You are brought in to prove what happened, show why detection failed, and demons
 {: .note }
 > **Azure costs:** All resources are provisioned in the lab tenant by the facilitator. You will not incur personal charges, and there is no learner cleanup — the environment is reset between cohorts.
 
-## Lab environment
+## Architecture
 
 You investigate from the **Microsoft Defender portal** (unified SecOps), with **Microsoft Sentinel** as the telemetry backbone and **standalone Security Copilot** as the cross-layer reasoning spine. Everything you need is reachable from the browser with your assigned credentials. Exercise 00 walks you through signing in and confirming access before the investigation begins.

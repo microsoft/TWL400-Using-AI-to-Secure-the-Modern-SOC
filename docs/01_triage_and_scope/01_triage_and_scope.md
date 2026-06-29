@@ -15,7 +15,7 @@ This is the "from many alerts to one chain" step. The narrative, entities, and i
 
 ## Objectives
 
-After completing this exercise, you'll be able to:
+At the end of this lab exercise, you'll be able to:
 
 * Navigate the Defender XDR cross-layer incident and recognize how signal overload hides the real attack
 * Use standalone Security Copilot as a reasoning layer over Defender, Entra, Defender for Cloud (AI), and endpoint signals
@@ -24,11 +24,11 @@ After completing this exercise, you'll be able to:
 
 ## Duration
 
-* **Estimated time:** 20 minutes
+**Estimated time:** 20 minutes
 
 ## Tasks
 
-- Task 01.01 — [Open the unified incident in the Defender portal](01_01.html)
-- Task 01.02 — [Correlate the scattered signals with Security Copilot](01_02.html)
-- Task 01.03 — [Extract entities and assemble the initial timeline](01_03.html)
-- Task 01.04 — [Recognize why signal overload hides the chain](01_04.html)
+- Task 01.01 — [Open the unified incident in the Defender portal](01_01.html){:target="_blank"}
+- Task 01.02 — [Correlate the scattered signals with Security Copilot](01_02.html){:target="_blank"}
+- Task 01.03 — [Extract entities and assemble the initial timeline](01_03.html){:target="_blank"}
+- Task 01.04 — [Recognize why signal overload hides the chain](01_04.html){:target="_blank"}

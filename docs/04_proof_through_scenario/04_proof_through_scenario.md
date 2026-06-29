@@ -17,7 +17,7 @@ This is the "from one chain to one decision" step. You're not finding anything n
 
 ## Objectives
 
-After completing this exercise, you'll be able to:
+At the end of this lab exercise, you'll be able to:
 
 * Synthesize the investigation into a single end-to-end attack visualization spanning identity, data/AI, AI, infrastructure, and endpoint
 * Summarize the main detection and response failure points and explain why each one broke down
@@ -26,11 +26,11 @@ After completing this exercise, you'll be able to:
 
 ## Duration
 
-* **Estimated time:** 15 minutes
+**Estimated time:** 15 minutes
 
 ## Tasks
 
-- Task 04.01 — [Assemble the end-to-end attack visualization](04_01.html)
-- Task 04.02 — [Summarize the main failure points](04_02.html)
-- Task 04.03 — [Connect failures to business impact](04_03.html)
-- Task 04.04 — [Package the Proof Through Scenario artifact](04_04.html)
+- Task 04.01 — [Assemble the end-to-end attack visualization](04_01.html){:target="_blank"}
+- Task 04.02 — [Summarize the main failure points](04_02.html){:target="_blank"}
+- Task 04.03 — [Connect failures to business impact](04_03.html){:target="_blank"}
+- Task 04.04 — [Package the Proof Through Scenario artifact](04_04.html){:target="_blank"}

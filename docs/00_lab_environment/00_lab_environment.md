@@ -15,7 +15,7 @@ This short exercise gets you signed in, confirms you can reach the three surface
 
 ## Objectives
 
-After completing this exercise, you'll be able to:
+At the end of this lab exercise, you'll be able to:
 
 * Sign in to the Zava lab tenant and complete multifactor authentication
 * Confirm access to the Defender portal, Microsoft Sentinel, and standalone Security Copilot
@@ -24,9 +24,9 @@ After completing this exercise, you'll be able to:
 
 ## Duration
 
-* **Estimated time:** 10–15 minutes
+**Estimated time:** 10–15 minutes
 
 ## Tasks
 
-- Task 00.01 — [Sign in and verify console access](00_01.html)
-- Task 00.02 — [Orient to the scenario and the SOC alert queue](00_02.html)
+- Task 00.01 — [Sign in and verify console access](00_01.html){:target="_blank"}
+- Task 00.02 — [Orient to the scenario and the SOC alert queue](00_02.html){:target="_blank"}

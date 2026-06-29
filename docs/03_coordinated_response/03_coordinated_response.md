@@ -19,7 +19,7 @@ This is the "from understanding to containment" step. The executed response, the
 
 ## Objectives
 
-After completing this exercise, you'll be able to:
+At the end of this lab exercise, you'll be able to:
 
 * Design a coordinated, cross-layer response to the reconstructed attack from Exercise 02
 * Execute response actions spanning identity, data, and infrastructure layers
@@ -29,11 +29,11 @@ After completing this exercise, you'll be able to:
 
 ## Duration
 
-* **Estimated time:** 25 minutes
+**Estimated time:** 25 minutes
 
 ## Tasks
 
-- Task 03.01 — [Generate the response with Copilot and execute coordinated containment](03_01.html)
-- Task 03.02 — [Operationalize the response with Sentinel automation](03_02.html)
-- Task 03.03 — [Define the autonomous-vs-human-approved boundary](03_03.html)
-- Task 03.04 — [Document residual risk](03_04.html)
+- Task 03.01 — [Generate the response with Copilot and execute coordinated containment](03_01.html){:target="_blank"}
+- Task 03.02 — [Operationalize the response with Sentinel automation](03_02.html){:target="_blank"}
+- Task 03.03 — [Define the autonomous-vs-human-approved boundary](03_03.html){:target="_blank"}
+- Task 03.04 — [Document residual risk](03_04.html){:target="_blank"}
