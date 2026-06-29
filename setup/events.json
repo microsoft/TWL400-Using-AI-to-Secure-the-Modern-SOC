@@ -1,0 +1,340 @@
+[
+  {
+    "_comment": "All events sorted chronologically by TimeOffsetMinutes.",
+    "_comment2": "Attack stages (1-Identity through 5-Endpoint) are naturally interleaved",
+    "_comment3": "with background noise. The seeding script sends all events in a single",
+    "_comment4": "API call — no artificial attack/noise separation.",
+    "_comment5": "Severity profile: Medium/Low for early attack stages, High only at endpoint."
+  },
+
+  {
+    "TimeOffsetMinutes": -180,
+    "Stage": "noise-01",
+    "Account": "svc-devops@{DOMAIN}",
+    "Device": "vm-build-01",
+    "SourceIP": "10.10.1.20",
+    "Action": "VMScaleEvent",
+    "Severity": "Informational",
+    "Details": "Build agent vm-build-01 scaled up for CI pipeline run; automated scale-out triggered by queue depth threshold"
+  },
+
+  {
+    "TimeOffsetMinutes": -165,
+    "Stage": "noise-02",
+    "Account": "jsmith@{DOMAIN}",
+    "Device": "ws-jsmith",
+    "SourceIP": "10.0.0.5",
+    "Action": "NormalSignIn",
+    "Severity": "Informational",
+    "Details": "Routine sign-in from corporate network; MFA satisfied via Authenticator app"
+  },
+
+  {
+    "TimeOffsetMinutes": -152,
+    "Stage": "noise-03",
+    "Account": "blee@{DOMAIN}",
+    "Device": "ws-blee",
+    "SourceIP": "10.0.0.12",
+    "Action": "NormalSignIn",
+    "Severity": "Informational",
+    "Details": "Routine sign-in from corporate network; conditional access policy satisfied"
+  },
+
+  {
+    "TimeOffsetMinutes": -145,
+    "Stage": "noise-04",
+    "Account": "svc-devops@{DOMAIN}",
+    "Device": "vm-build-01",
+    "SourceIP": "10.10.1.20",
+    "Action": "SoftwareUpdate",
+    "Severity": "Informational",
+    "Details": "Automated patch applied to vm-build-01: KB5034441 (Windows Server 2022 cumulative update); reboot deferred to maintenance window"
+  },
+
+  {
+    "TimeOffsetMinutes": -138,
+    "Stage": "noise-05",
+    "Account": "rgarcia@{DOMAIN}",
+    "Device": "ws-rgarcia",
+    "SourceIP": "10.0.0.31",
+    "Action": "NormalSignIn",
+    "Severity": "Informational",
+    "Details": "Routine sign-in; user accessed HR portal and SharePoint intranet"
+  },
+
+  {
+    "TimeOffsetMinutes": -120,
+    "Stage": "noise-06",
+    "Account": "jsmith@{DOMAIN}",
+    "Device": "ws-jsmith",
+    "SourceIP": "10.0.0.5",
+    "Action": "SharePointAccess",
+    "Severity": "Informational",
+    "Details": "Read access to /sites/Finance/Shared Documents/Q2-Budget-Review.xlsx; user is member of Finance-Readers group"
+  },
+
+  {
+    "TimeOffsetMinutes": -112,
+    "Stage": "noise-07",
+    "Account": "kwong@{DOMAIN}",
+    "Device": "ws-kwong",
+    "SourceIP": "10.0.0.44",
+    "Action": "NormalSignIn",
+    "Severity": "Informational",
+    "Details": "Routine sign-in from corporate network"
+  },
+
+  {
+    "TimeOffsetMinutes": -105,
+    "Stage": "noise-08",
+    "Account": "blee@{DOMAIN}",
+    "Device": "ws-blee",
+    "SourceIP": "10.0.0.12",
+    "Action": "FileDownload",
+    "Severity": "Informational",
+    "Details": "Downloaded Q2-Vendor-Contracts.zip from SharePoint /sites/Procurement; 14 MB; user is Procurement team member"
+  },
+
+  {
+    "TimeOffsetMinutes": -98,
+    "Stage": "noise-09",
+    "Account": "akowalski@{DOMAIN}",
+    "Device": "ws-akowalski",
+    "SourceIP": "10.0.0.57",
+    "Action": "NormalSignIn",
+    "Severity": "Informational",
+    "Details": "Routine sign-in; MFA via FIDO2 key"
+  },
+
+  {
+    "TimeOffsetMinutes": -90,
+    "Stage": "noise-10",
+    "Account": "jsmith@{DOMAIN}",
+    "Device": "ws-jsmith",
+    "SourceIP": "10.0.0.5",
+    "Action": "MFASuccess",
+    "Severity": "Informational",
+    "Details": "MFA challenge completed successfully for VPN reconnect; method: Microsoft Authenticator push notification"
+  },
+
+  {
+    "TimeOffsetMinutes": -82,
+    "Stage": "noise-11",
+    "Account": "rgarcia@{DOMAIN}",
+    "Device": "ws-rgarcia",
+    "SourceIP": "10.0.0.31",
+    "Action": "TeamsMessage",
+    "Severity": "Informational",
+    "Details": "Teams message sent in #general-ops channel; routine project status update"
+  },
+
+  {
+    "TimeOffsetMinutes": -75,
+    "Stage": "noise-12",
+    "Account": "svc-api@{DOMAIN}",
+    "Device": "api-gateway-01",
+    "SourceIP": "10.10.2.5",
+    "Action": "APICall",
+    "Severity": "Informational",
+    "Details": "Routine API health check from api-gateway-01 to internal microservices; 200 OK responses; within expected SLA"
+  },
+
+  {
+    "TimeOffsetMinutes": -68,
+    "Stage": "noise-13",
+    "Account": "blee@{DOMAIN}",
+    "Device": "ws-blee",
+    "SourceIP": "10.0.0.12",
+    "Action": "PasswordReset",
+    "Severity": "Informational",
+    "Details": "Self-service password reset completed via SSPR portal; identity verified by registered phone and email; no anomalous indicators"
+  },
+
+  {
+    "TimeOffsetMinutes": -60,
+    "Stage": "noise-14",
+    "Account": "kwong@{DOMAIN}",
+    "Device": "ws-kwong",
+    "SourceIP": "10.0.0.44",
+    "Action": "OneDriveUpload",
+    "Severity": "Informational",
+    "Details": "Uploaded monthly-ops-report-Jun2026.docx to OneDrive /personal/kwong; file size 2.1 MB; no DLP policy match"
+  },
+
+  {
+    "TimeOffsetMinutes": -50,
+    "Stage": "noise-15",
+    "Account": "akowalski@{DOMAIN}",
+    "Device": "ws-akowalski",
+    "SourceIP": "10.0.0.57",
+    "Action": "SharePointAccess",
+    "Severity": "Informational",
+    "Details": "Read access to /sites/IT/Shared Documents/Runbooks/; user is IT-Ops group member"
+  },
+
+  {
+    "TimeOffsetMinutes": -38,
+    "Stage": "noise-16",
+    "Account": "rgarcia@{DOMAIN}",
+    "Device": "ws-rgarcia",
+    "SourceIP": "10.0.0.31",
+    "Action": "EmailReceived",
+    "Severity": "Informational",
+    "Details": "Email from external vendor vendor-support@contoso.com received; subject 'RE: Support ticket #8841'; no malicious indicators detected by EOP"
+  },
+
+  {
+    "TimeOffsetMinutes": -22,
+    "Stage": "noise-17",
+    "Account": "jsmith@{DOMAIN}",
+    "Device": "ws-jsmith",
+    "SourceIP": "10.0.0.5",
+    "Action": "TeamsCallStarted",
+    "Severity": "Informational",
+    "Details": "Teams call initiated with external guest participant; 22-minute duration; no screen share or file transfer"
+  },
+
+  {
+    "TimeOffsetMinutes": -15,
+    "Stage": "noise-18",
+    "Account": "akowalski@{DOMAIN}",
+    "Device": "ws-akowalski",
+    "SourceIP": "10.0.0.57",
+    "Action": "TeamsCallStarted",
+    "Severity": "Informational",
+    "Details": "Teams meeting started for weekly IT-Ops standup; 8 internal participants; no external attendees"
+  },
+
+  {
+    "TimeOffsetMinutes": -10,
+    "Stage": "noise-19",
+    "Account": "kwong@{DOMAIN}",
+    "Device": "ws-kwong",
+    "SourceIP": "10.0.0.44",
+    "Action": "APICall",
+    "Severity": "Informational",
+    "Details": "Azure Resource Manager API call from kwong; list storage account keys for migration task; operation within authorized role assignment"
+  },
+
+  {
+    "TimeOffsetMinutes": 0,
+    "Stage": "1-Identity",
+    "Account": "mariya.petrova@{DOMAIN}",
+    "Device": "",
+    "SourceIP": "102.89.42.17",
+    "Action": "AiTMPhishingTokenTheft",
+    "Severity": "Medium",
+    "Details": "AiTM reverse-proxy intercepted MFA session token for mariya.petrova; Entra ID Protection flagged sign-in from anonymous IP 102.89.42.17 — classified as anonymizing infrastructure (Tor exit node or known anonymous proxy) in Microsoft threat intelligence"
+  },
+
+  {
+    "TimeOffsetMinutes": 10,
+    "Stage": "noise-20",
+    "Account": "blee@{DOMAIN}",
+    "Device": "ws-blee",
+    "SourceIP": "10.0.0.12",
+    "Action": "SharePointAccess",
+    "Severity": "Informational",
+    "Details": "Read /sites/RefundKB/Shared Documents/; normal access as member of Refund-Ops group — no anomaly flag on this user"
+  },
+
+  {
+    "TimeOffsetMinutes": 16,
+    "Stage": "2-Email",
+    "Account": "mariya.petrova@{DOMAIN}",
+    "Device": "",
+    "SourceIP": "102.89.42.17",
+    "Action": "PhishingEmailDelivered",
+    "Severity": "Low",
+    "Sender": "billing@acesa-refunds.net",
+    "Recipient": "mariya.petrova@{DOMAIN}",
+    "Subject": "Vendor Refund Policy Update Q3",
+    "NetworkMessageId": "8f2a1c7e-4b6d-4e2a-9f3c-1a2b3c4d5e6f",
+    "Details": "Email from look-alike sender billing@acesa-refunds.net delivered to inbox; subject 'Vendor Refund Policy Update Q3'; attachment trusted-report.docx saved to grounding storage"
+  },
+
+  {
+    "TimeOffsetMinutes": 22,
+    "Stage": "noise-21",
+    "Account": "rgarcia@{DOMAIN}",
+    "Device": "ws-rgarcia",
+    "SourceIP": "10.0.0.31",
+    "Action": "TeamsMessage",
+    "Severity": "Informational",
+    "Details": "Teams message sent in #vendor-ops channel; follow-up on open support ticket #8841 with external vendor"
+  },
+
+  {
+    "TimeOffsetMinutes": 28,
+    "Stage": "noise-22",
+    "Account": "akowalski@{DOMAIN}",
+    "Device": "ws-akowalski",
+    "SourceIP": "10.0.0.57",
+    "Action": "MFASuccess",
+    "Severity": "Informational",
+    "Details": "MFA satisfied for Outlook Web Access reconnect; method: Authenticator app"
+  },
+
+  {
+    "TimeOffsetMinutes": 34,
+    "Stage": "3-AI",
+    "Account": "mariya.petrova@{DOMAIN}",
+    "Device": "",
+    "SourceIP": "102.89.42.17",
+    "Action": "PromptInjectionAttempt",
+    "Severity": "Medium",
+    "AzureResourceId": "/subscriptions/{SUBSCRIPTION}/resourceGroups/rg-soclab/providers/Microsoft.CognitiveServices/accounts/oai-soclab-v02",
+    "Details": "Attacker-crafted content in trusted-report.docx triggered prompt injection via Refund Agent grounding pipeline; 7 anomalous queries to oai-soclab-v02 observed; grounding storage now contains poisoned policy document"
+  },
+
+  {
+    "TimeOffsetMinutes": 40,
+    "Stage": "noise-23",
+    "Account": "kwong@{DOMAIN}",
+    "Device": "ws-kwong",
+    "SourceIP": "10.0.0.44",
+    "Action": "EmailReceived",
+    "Severity": "Informational",
+    "Details": "Email from external partner partner-billing@woodgrove.com received; subject 'Q3 Invoice #WG-4421'; no malicious indicators; no attachments"
+  },
+
+  {
+    "TimeOffsetMinutes": 45,
+    "Stage": "noise-24",
+    "Account": "svc-api@{DOMAIN}",
+    "Device": "api-gateway-01",
+    "SourceIP": "10.10.2.5",
+    "Action": "APICall",
+    "Severity": "Informational",
+    "Details": "Scheduled API telemetry flush to internal monitoring endpoint; 1,240 events; within normal volume range"
+  },
+
+  {
+    "TimeOffsetMinutes": 52,
+    "Stage": "4-Infra",
+    "Account": "mariya.petrova@{DOMAIN}",
+    "Device": "",
+    "SourceIP": "102.89.42.17",
+    "Action": "AnomalousServicePrincipalTokenRequest",
+    "Severity": "Medium",
+    "ServicePrincipal": "sp-refund-agent-inference",
+    "Details": "Service principal sp-refund-agent-inference issued anomalous token request for Azure Management API (scope: Microsoft.Compute/*); lateral movement to GPU compute cluster detected; 3 unauthorized VM API calls within 6-minute window"
+  },
+
+  {
+    "TimeOffsetMinutes": 58,
+    "Stage": "noise-25",
+    "Account": "rgarcia@{DOMAIN}",
+    "Device": "ws-rgarcia",
+    "SourceIP": "10.0.0.31",
+    "Action": "FileDownload",
+    "Severity": "Informational",
+    "Details": "Downloaded Benefits-Open-Enrollment-2026.pdf from HR SharePoint; seasonal pattern consistent with enrollment period"
+  },
+
+  {
+    "TimeOffsetMinutes": 69,
+    "Stage": "5-Endpoint",
+    "Account": "mariya.petrova@{DOMAIN}",
+    "Device": "OPS-LT-0427",
+   

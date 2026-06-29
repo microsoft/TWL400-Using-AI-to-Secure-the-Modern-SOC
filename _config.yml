@@ -1,0 +1,60 @@
+title: "TWL400: Using AI to Secure the Modern SOC"
+description: >-
+  Module 3 hands-on lab — Cross-Layer Attack Lab (End-to-End). Investigate and
+  respond to a coordinated, AI-driven attack spanning identity, AI, data,
+  infrastructure, and endpoint using Microsoft Security Copilot, Defender XDR,
+  Sentinel, Entra, and Microsoft Defender for Cloud — AI threat protection.
+
+theme: just-the-docs
+
+# Generated site lives under https://<org>.github.io/<repo>/. Override `url`
+# and `baseurl` to match your GitHub Pages settings before publishing.
+url: ""
+baseurl: ""
+
+# Header links shown in the top-right of every page.
+aux_links:
+  "View on GitHub":
+    - "https://github.com/solliancenet/TWL400-Securing-AI"
+aux_links_new_tab: true
+
+# Show the "next / previous" navigation between pages.
+nav_enabled: true
+
+# Enable Mermaid diagram rendering in fenced ```mermaid code blocks
+# (used for the cross-layer attack visualization in Exercise 04).
+mermaid:
+  version: "10.9.1"
+
+# Custom callout styles usable in pages, e.g.:
+#   {: .note }
+#   > Heads up...
+callouts_level: quiet # or loud
+callouts:
+  note:
+    title: Note
+    color: blue
+  tip:
+    title: Tip
+    color: green
+  important:
+    title: Important
+    color: purple
+  warning:
+    title: Warning
+    color: yellow
+  caution:
+    title: Caution
+    color: red
+
+# Keep repo meta-files out of the published site — docs/ and media/ are the
+# only content trees Jekyll should render.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - CLAUDE.md
+  - LICENSE
+  - SECURITY.md
+  - SUPPORT.md
+  - .devcontainer/
