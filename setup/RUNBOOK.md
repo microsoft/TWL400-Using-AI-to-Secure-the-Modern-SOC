@@ -6,6 +6,22 @@
 
 ---
 
+## Quick Start
+
+Three wrapper scripts cover the full lifecycle. Run from the `setup\` directory with `az` CLI signed in.
+
+| Task | Command |
+|------|---------|
+| Full build (first time) | `.\build.ps1 -Suffix v02 -Domain AcesaDev.onmicrosoft.com` |
+| Re-seed (events only) | `.\reseed.ps1` |
+| Re-seed + AI jailbreak alert | `.\reseed.ps1 -SeedAI` |
+| Teardown (keep tenant objects) | `.\teardown.ps1` |
+| Teardown + full tenant reset | `.\teardown.ps1 -Full` |
+
+Each script automates all CLI/Python steps and pauses at the three manual portal steps (Defender XDR workspace connect, Office 365 API auth, Security Copilot capacity). The detailed step-by-step procedure below remains the authoritative reference.
+
+---
+
 ## TECHNICIAN PREREQUISITES
 
 Install and verify all of the following on the setup technician's machine **before** beginning any build or hydration procedure.
@@ -306,6 +322,20 @@ az role assignment create --assignee-object-id $PrincipalId --assignee-principal
 ```powershell
 $WsId = az monitor log-analytics workspace show -g rg-soclab -n $WsName --query id -o tsv
 az role assignment create --assignee-object-id $PrincipalId --assignee-principal-type ServicePrincipal --role "Microsoft Sentinel Responder" --scope $WsId
+```
+
+*Microsoft Sentinel Automation Contributor on rg-soclab (required for the playbook to appear and be selectable in Sentinel automation rules — without this it shows greyed out):*
+
+The Sentinel workspace must have a system-assigned managed identity. Enable it if not already present, then capture its principal ID:
+```powershell
+az monitor log-analytics workspace update -g rg-soclab -n $WsName --identity-type SystemAssigned
+$SentinelPrincipalId = az monitor log-analytics workspace show -g rg-soclab -n $WsName --query identity.principalId -o tsv
+Write-Host "Sentinel workspace MI: $SentinelPrincipalId"
+```
+
+Verify `$SentinelPrincipalId` is a non-empty GUID, then assign the role:
+```powershell
+az role assignment create --assignee-object-id $SentinelPrincipalId --assignee-principal-type ServicePrincipal --role "Microsoft Sentinel Automation Contributor" --scope $RgId
 ```
 
 ⚠️ RBAC propagation takes 1–3 minutes. Wait before testing the playbook.

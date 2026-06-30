@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex04 Business Impact Narrative</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; max-width: 860px; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 24px 0; font-size: 12px; }
+  .panels { display: flex; gap: 24px; }
+  .panel { flex: 1; border: 1px solid #ddd; border-radius: 6px; padding: 20px; }
+  .panel-ciso { border-top: 4px solid #1a3a5c; }
+  .panel-caio { border-top: 4px solid #6b2fa0; }
+  .persona { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .persona-ciso { color: #1a3a5c; }
+  .persona-caio { color: #6b2fa0; }
+  .name { font-size: 14px; font-weight: bold; margin-bottom: 12px; color: #111; }
+  p.body { line-height: 1.7; margin: 0; color: #222; }
+</style>
+</head>
+<body>
+<h2>Exercise 04 — Business Impact Narrative</h2>
+<p class="sub">Two-paragraph executive framing — CISO and CAIO perspectives side by side. Plain business English, no product names.</p>
+
+<div class="panels">
+  <div class="panel panel-ciso">
+    <div class="persona persona-ciso">For the CISO</div>
+    <div class="name">Vikram — Risk &amp; SOC Operational Load</div>
+    <p class="body">A five-stage attack moved across five different security tools in just over an hour, with each alert appearing minor on its own and every signal competing for attention among roughly 25 other incidents. For a security team already managing 50 to 75 fragmented tools, manually connecting those dots fast enough to stop the attacker is not a realistic expectation — it is a structural impossibility. An AI-driven approach automatically correlates related signals across all five layers, cuts the time from first alert to coordinated containment from hours to minutes, and reduces the number of consoles your analysts must juggle on every shift.</p>
+  </div>
+  <div class="panel panel-caio">
+    <div class="persona persona-caio">For the CAIO</div>
+    <div class="name">Michelle — AI Asset Exposure &amp; Governance</div>
+    <p class="body">This attack did not target a database or an endpoint as its primary objective — it targeted a production AI system by poisoning the data source the system trusts and probing it with crafted inputs designed to make it act on attacker-controlled information. A detection model built for conventional threats has no native view of that exposure; the AI-layer alert fired and was promptly lost in the noise. Closing that blind spot means AI systems become visible inside your security operations alongside every other asset — so the next attempt to manipulate a production model is caught and contained before it affects business decisions or customer outcomes.</p>
+  </div>
+</div>
+</body>
+</html>

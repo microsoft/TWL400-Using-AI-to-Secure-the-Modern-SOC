@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex02 Systemic Dependencies</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 18px 0; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  tr.across { background: #fff3cd !important; }
+  .hop { font-weight: bold; white-space: nowrap; }
+  .fix { color: #555; font-style: italic; font-size: 12px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<h2>Exercise 02 — Systemic Dependencies Table</h2>
+<p class="sub">Maps each stage-to-stage hop to the trust relationship or design choice that enabled it.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Hop</th>
+      <th>Systemic Dependency That Enabled It</th>
+      <th>Design Change That Breaks It</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="hop">Stage 1 → 2</td>
+      <td>The Refund Policy Knowledge Base <strong>implicitly trusts authenticated uploads</strong>; a valid (stolen) session was sufficient to poison the grounding source — no separate review of grounding-content changes exists.</td>
+      <td class="fix">Require grounding-source change review / approval workflow independent of the uploading identity's session validity.</td>
+    </tr>
+    <tr>
+      <td class="hop">Stage 2 → 3</td>
+      <td>The Refund Agent <strong>trusts its grounding source as authoritative</strong>; poisoned content is treated as policy, so prompt injection rides in through RAG rather than being filtered as untrusted external input.</td>
+      <td class="fix">Treat RAG-retrieved content as untrusted input; apply content safety filtering at the retrieval layer, not only at the prompt layer.</td>
+    </tr>
+    <tr>
+      <td class="hop">Stage 3 → 4</td>
+      <td><code>sp-refund-agent-inference</code> is <strong>over-privileged</strong> relative to its task — it holds reach to the Azure OpenAI resource (<code>oai-soclab-v02</code>) in <code>rg-soclab</code>, so a compromised agent context translates directly into infrastructure reach.</td>
+      <td class="fix">Scope <code>sp-refund-agent-inference</code> to least-privilege; remove standing access to production AI infrastructure it does not need at rest.</td>
+    </tr>
+    <tr>
+      <td class="hop">Stage 4 → 5</td>
+      <td>Endpoint <strong>OPS-LT-0427</strong> and the cloud identity share the same compromised user context with <strong>no segmentation</strong> between cloud and on-device execution planes.</td>
+      <td class="fix">Enforce identity segmentation between cloud service-principal context and endpoint user context; device compliance gate before cloud token issuance.</td>
+    </tr>
+    <tr class="across">
+      <td class="hop">Across all stages</td>
+      <td><strong>Fragmented tooling (50–75 products)</strong> is itself a systemic dependency: with no shared correlation layer, each trust boundary is policed in isolation and the full cascade is invisible end to end — no single tool sees the chain.</td>
+      <td class="fix">Unified cross-layer correlation (e.g. Microsoft Sentinel + Defender XDR) with analytics rules that join identity, AI, infrastructure, and endpoint signals into one incident.</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
