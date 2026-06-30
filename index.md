@@ -4,47 +4,27 @@ layout: home
 nav_order: 1
 ---
 
-# Using AI to Secure the Modern SOC — Module 3 Hands-On Lab
+# TWL400: Using AI to Secure the Modern SOC
 
-**Cross-Layer Attack Lab (End-to-End)**
+This lab guides you through a series of practical exercises for investigating and responding to a coordinated, AI-driven attack as part of Module 3 of the *Using AI to Secure the Modern SOC* workshop. You advise Zava, an enterprise whose SOC is buried in routine, noisy alerts while a five-stage attack moves across identity, data/AI grounding, AI workloads, infrastructure, and endpoint — each signal individually low-risk and landing in a different console. Exercises cover triage and signal correlation, attack lifecycle reconstruction, coordinated automated response, and production of the Proof Through Scenario executive deliverable, using Microsoft Security Copilot, Microsoft Defender XDR, Microsoft Sentinel, Entra ID, and Microsoft Defender for Cloud.
 
-This hands-on lab is the practical core of **Module 3** of the *Using AI to Secure the Modern SOC* workshop. While the surrounding modules reason about AI threats, architecture, SOC operations, and executive value on a whiteboard, this module puts you in a **live tenant** to investigate and respond to a coordinated, AI-driven attack in real Microsoft tooling — and to produce the module's executive deliverable, the **Proof Through Scenario**, that feeds Modules 4 and 5.
+## Exercises
 
-## Scenario
+This lab has exercises on:
 
-You are a security Cloud Solution Architect advising **Zava**, a large enterprise scaling AI from pilots to production on a heavy but fragmented Microsoft security investment. Zava's SOC is understaffed and buried under alert volume — its analysts are **drowning in alerts**, with roughly **25 real-looking incidents** in the queue (routine risky sign-ins, benign DLP hits, commodity malware, failed-logon bursts, impossible-but-benign travel) on any given shift.
-
-Over a short window, a coordinated AI-driven attack has moved across **identity, data/AI grounding, AI, infrastructure, and endpoint**. Each signal is individually low-risk — an anonymous IP sign-in, a phishing email, a saved "policy update," some inference traffic, an endpoint script — lands in a different console, and is **randomly interspersed among the ~25 decoy incidents**. From the SOC's view nothing stands out. In reality, the **Zava Refund Agent** — a real Azure OpenAI endpoint — and the infrastructure behind it have been compromised.
-
-You are brought in to prove what happened, show why detection failed, and demonstrate the AI-driven SecOps response that should have fired. The lab rewards **system-level SecOps judgment** — correlating signals across layers and recognizing where telemetry and automation gaps let the chain through — not single-product feature clicks.
-
-## What you'll do
-
-| # | Exercise | Duration |
-|---|----------|----------|
-| 00 | [Access Your Lab Environment](docs/00_lab_environment/00_lab_environment.html){:target="_blank"} | ~10–15 min |
-| 01 | [Triage & Scope the Cross-Layer Incident](docs/01_triage_and_scope/01_triage_and_scope.html){:target="_blank"} | ~20 min |
-| 02 | [Reconstruct the Attack Lifecycle Across Layers](docs/02_reconstruct_the_lifecycle/02_reconstruct_the_lifecycle.html){:target="_blank"} | ~25 min |
-| 03 | [Design & Execute the Coordinated Response](docs/03_coordinated_response/03_coordinated_response.html){:target="_blank"} | ~25 min |
-| 04 | [Proof Through Scenario — Visualize the Attack & Failure Points](docs/04_proof_through_scenario/04_proof_through_scenario.html){:target="_blank"} | ~15 min |
-| 05 | [Wrap-Up & Hand-Off](docs/05_wrap_up_and_hand_off/05_wrap_up_and_hand_off.html){:target="_blank"} | <15 min (or post-delivery) |
-
-{: .note }
-> Durations are proposed and will be finalized against the parent workshop's timing design.
+* Accessing the lab environment and verifying portal access
+* Triaging and scoping a cross-layer attack incident using Security Copilot
+* Reconstructing the full attack lifecycle across identity, data/AI grounding, AI, infrastructure, and endpoint
+* Designing and executing a coordinated automated response using Microsoft Sentinel
+* Packaging the Proof Through Scenario — end-to-end attack visualization, failure analysis, and executive business impact
+* Wrapping up and handing off to subsequent workshop modules
 
 ## Prerequisites
 
-| Requirement | Details |
-|-------------|---------|
-| Lab credentials | A pre-provisioned, Azure-capable Zava tenant account, supplied by your facilitator |
-| Browser | A current Microsoft Edge or Chrome browser — no VM or local install required |
-| Microsoft 365 / Security licensing | Provisioned in the lab tenant: Microsoft 365 E5, Security Copilot (SCUs), Defender XDR, Entra ID Protection / Conditional Access |
-| Azure subscription components | Provisioned and pre-seeded in the lab tenant: Microsoft Sentinel + Log Analytics workspace, an Azure OpenAI endpoint (the Zava Refund Agent — `oai-soclab-v02`, `gpt-4o` deployment), and Microsoft Defender for Cloud — AI threat protection enabled on it |
-| Background (recommended) | Familiarity with Defender XDR incidents, KQL basics, and the idea of RAG-grounded AI apps. Modules 1–2 of the workshop provide the conceptual grounding. |
+For running this lab you will need:
 
-{: .note }
-> **Azure costs:** All resources are provisioned in the lab tenant by the facilitator. You will not incur personal charges, and there is no learner cleanup — the environment is reset between cohorts.
-
-## Architecture
-
-You investigate from the **Microsoft Defender portal** (unified SecOps), with **Microsoft Sentinel** as the telemetry backbone and **standalone Security Copilot** as the cross-layer reasoning spine. Everything you need is reachable from the browser with your assigned credentials. Exercise 00 walks you through signing in and confirming access before the investigation begins.
+* A pre-provisioned Zava lab tenant account with Azure access, supplied by your facilitator
+* A current Microsoft Edge or Chrome browser (no VM or local install required)
+* Microsoft 365 E5, Security Copilot (SCUs), Defender XDR, and Entra ID Protection / Conditional Access — provisioned in the lab tenant
+* Microsoft Sentinel, an Azure OpenAI endpoint (the Zava Refund Agent — `oai-soclab-v02`, `gpt-4o` deployment), and Microsoft Defender for Cloud — AI threat protection — provisioned and pre-seeded in the lab tenant
+* Familiarity with Defender XDR incidents, KQL basics, and RAG-grounded AI apps (recommended — Modules 1–2 provide the conceptual grounding)
