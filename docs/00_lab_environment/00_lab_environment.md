@@ -24,9 +24,4 @@ After completing this exercise, you'll be able to:
 
 ## Duration
 
-* **Estimated time:** 10–15 minutes
-
-## Tasks
-
-- Task 00.01 — [Sign in and verify console access](00_01.html)
-- Task 00.02 — [Orient to the scenario and the SOC alert queue](00_02.html)
+* **Estimated Time:** 10–15 minutes

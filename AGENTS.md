@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-Guidance for Claude Code (and any author) working in this repository. This file is the **single source of truth** for the lab's scenario facts ("canon") and its MCAP authoring conventions. Read it before editing any page under `docs/`.
+Guidance for AI coding agents (and any human author) working in this repository. This file is the **single source of truth** for the lab's scenario facts ("canon") and its MCAP authoring conventions. Read it before editing any page under `docs/`.
 
 ## Project overview
 

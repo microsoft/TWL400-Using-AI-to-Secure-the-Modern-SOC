@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex02 Gap Table</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 16px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  .failure { font-weight: bold; color: #c00; }
+  .dominant { background: #fff3cd !important; }
+</style>
+</head>
+<body>
+<h2>Exercise 02 — Detection Gap Table</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Stage</th>
+      <th>Telemetry Source</th>
+      <th>Signal Present?</th>
+      <th>Correlated Across Layers?</th>
+      <th>Gap Type</th>
+      <th>What Should Have Fired</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1 — Initial access (Identity)</td>
+      <td>SocLabEvents_CL, Defender for Identity</td>
+      <td>Yes (medium severity)</td>
+      <td>No — raised in isolation, buried in noise</td>
+      <td class="failure">Failure point</td>
+      <td>Identity risk correlated to later AI / infra / endpoint activity</td>
+    </tr>
+    <tr>
+      <td>2 — Poisoning (grounding source)</td>
+      <td>SocLabEvents_CL (Stage_s == "2-Email")</td>
+      <td>Yes (injected event)</td>
+      <td>No — not wired into cross-layer incident; not linked to agent downstream behavior</td>
+      <td class="failure">Failure point</td>
+      <td>Grounding-source write event correlated to the identity compromise and subsequent AI probing</td>
+    </tr>
+    <tr class="dominant">
+      <td>3 — Reasoning probe (AI) ★ dominant gap</td>
+      <td>Defender for Cloud — AI threat protection (SecurityAlert)</td>
+      <td>Yes — real native alert fired</td>
+      <td>No — alert sat uncorrelated among ~25 decoys; never joined to identity, infra, or endpoint stages</td>
+      <td class="failure">Failure point (dominant)</td>
+      <td>Cross-layer correlation rule joining Defender for Cloud AI alert to the poisoned grounding source and the identity / infrastructure / endpoint chain</td>
+    </tr>
+    <tr>
+      <td>4 — Lateral movement (Infrastructure)</td>
+      <td>SocLabEvents_CL, Defender for Identity</td>
+      <td>Yes (confirmed in Task 02)</td>
+      <td>No — not correlated to the AI probing that preceded it</td>
+      <td class="failure">Failure point</td>
+      <td>Service-principal anomaly on production AI infra joined to the compromised user identity and the AI-layer alert</td>
+    </tr>
+    <tr>
+      <td>5 — Execution (Endpoint)</td>
+      <td>Injected SocLabEvents_CL (synthetic OPS-LT-0427)</td>
+      <td>Yes (standalone low/medium detection)</td>
+      <td>No — not tied to identity origin or upstream AI / infra activity</td>
+      <td class="failure">Failure point</td>
+      <td>Encoded PowerShell beacon on endpoint correlated back to the originating identity compromise and lateral movement chain</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex04 Copilot End-to-End Summary</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; max-width: 960px; }
+  .copilot-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .copilot-icon { width: 28px; height: 28px; background: linear-gradient(135deg, #0078d4, #50e6ff); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
+  .prompt-box { background: #f5f7fa; border: 1px solid #ddd; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; color: #444; }
+  .prompt-box strong { display: block; margin-bottom: 6px; color: #1a3a5c; }
+  .response-box { border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 20px; }
+  .response-box p { margin: 0 0 10px 0; line-height: 1.6; }
+  .stage { font-weight: bold; color: #1a3a5c; }
+  .closing { margin-top: 14px; padding-top: 12px; border-top: 1px solid #eee; font-style: italic; color: #444; }
+  .ai-note { margin-top: 12px; font-size: 11px; color: #888; }
+</style>
+</head>
+<body>
+<div class="copilot-header">
+  <div class="copilot-icon">C</div>
+  <strong style="font-size:15px;">Microsoft Security Copilot</strong>
+</div>
+
+<div class="prompt-box">
+  <strong>Prompt submitted:</strong>
+  Write an end-to-end summary of the following cross-layer attack for a CISO and CAIO. The confirmed five-stage chain is: Stage 1 - Identity (T+0): AiTM phishing token theft compromised Mariya Petrova's session via anonymous IP 102.89.42.17 (Tor exit node). Stage 2 - Data/AI grounding (T+16 min): A poisoned policy document (trusted-report.docx) was uploaded to the Refund Agent's grounding storage container. Stage 3 - AI (T+34 min): Prompt-injection and jailbreak attempts were made against the Zava Refund Agent (oai-soclab-v02); blocked by Prompt Shields. Stage 4 - Infrastructure (T+52 min): Service principal sp-refund-agent-inference made anomalous token and compute requests toward GPU inference. Stage 5 - Endpoint (T+69 min): An encoded PowerShell beacon (update_check.ps1) executed on OPS-LT-0427. For each stage, write one plain-English sentence describing what happened and why it matters. Order by stage. Avoid jargon. End with one sentence on why no single alert revealed the full chain.
+</div>
+
+<div class="response-box">
+  <p><span class="stage">Stage 1 (T+0 — Identity):</span> An attacker stole Mariya Petrova's active login session using a phishing technique that bypassed multi-factor authentication from an anonymous Tor IP address, giving the attacker the same access rights as a legitimate employee without triggering a password alert.</p>
+
+  <p><span class="stage">Stage 2 (T+16 min — Data/AI Grounding):</span> Using Mariya's stolen session, the attacker uploaded a malicious document disguised as a vendor policy update into the Refund Agent's trusted knowledge base, poisoning the data source the AI relies on to answer questions — so that future agent responses would be shaped by attacker-controlled content.</p>
+
+  <p><span class="stage">Stage 3 (T+34 min — AI):</span> The attacker probed the Zava Refund Agent with crafted prompt-injection and jailbreak inputs designed to extract sensitive data or override the agent's behavior; Microsoft Defender for Cloud AI threat protection detected and blocked the direct injection attempts, though the poisoned grounding remained active upstream.</p>
+
+  <p><span class="stage">Stage 4 (T+52 min — Infrastructure):</span> A service account tied to the Refund Agent began making unusual requests for authentication tokens and GPU compute resources toward production AI infrastructure, indicating the attacker was attempting to expand their reach and leverage the agent's cloud access for further exploitation.</p>
+
+  <p><span class="stage">Stage 5 (T+69 min — Endpoint):</span> An encoded PowerShell script named update_check.ps1 executed on the corporate endpoint OPS-LT-0427, completing the attacker's path from a stolen user session all the way to code running on a company device — roughly 75 minutes after the initial compromise.</p>
+
+  <p class="closing">No single alert revealed the full chain because each stage generated a separate, low-to-medium-severity signal in a different security console — identity, storage, AI, infrastructure, and endpoint — and with no shared correlation layer connecting them, each looked individually unremarkable against a background of ~25 decoy incidents competing for analyst attention.</p>
+
+  <p class="ai-note">AI-generated content may be incorrect. Check it for accuracy.</p>
+</div>
+</body>
+</html>

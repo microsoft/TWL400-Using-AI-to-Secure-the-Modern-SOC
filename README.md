@@ -6,7 +6,7 @@ Learners take the role of a security Cloud Solution Architect advising **Zava**,
 
 The lab is published as a GitHub Pages site. Instructional content lives under [`docs/`](docs/), with image assets under [`media/`](media/).
 
-> **Draft status:** This is a full first draft authored from the lab outline ahead of the lab tenant build. Portal navigation, KQL, Security Copilot prompts, and the seeded entities are **illustrative** and will be validated against the provisioned environment during the build. See [`CLAUDE.md`](CLAUDE.md) for the lab canon and authoring conventions.
+> **Draft status:** This is a full first draft authored from the lab outline ahead of the lab tenant build. Portal navigation, KQL, Security Copilot prompts, and the seeded entities are **illustrative** and will be validated against the provisioned environment during the build. See [`AGENTS.md`](AGENTS.md) for the lab canon and authoring conventions.
 
 ## Build the site locally
 

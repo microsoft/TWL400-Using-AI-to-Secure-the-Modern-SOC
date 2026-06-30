@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex03 T02 — Playbook Run History + Activity Log</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; background: #f5f5f5; color: #111; }
+  .page { max-width: 980px; margin: 0 auto; padding: 28px 20px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Panel */
+  .panel { background: #fff; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; }
+  .panel-header { background: #f8f8f8; border-bottom: 1px solid #e0e0e0; padding: 12px 18px; font-size: 13px; font-weight: 600; color: #1a1a1a; display: flex; align-items: center; gap: 10px; }
+  .panel-header .breadcrumb { font-size: 11px; font-weight: 400; color: #666; margin-left: auto; }
+  .panel-body { padding: 0; }
+
+  /* Run history table */
+  .run-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .run-table th { background: #fafafa; border-bottom: 1px solid #e8e8e8; padding: 9px 16px; text-align: left; font-weight: 600; color: #444; font-size: 11px; }
+  .run-table td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  .run-table tr:last-child td { border-bottom: none; }
+  .status-succeeded { display: inline-flex; align-items: center; gap: 5px; color: #107c10; font-weight: 600; font-size: 12px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #107c10; flex-shrink: 0; }
+  .run-id { font-family: monospace; font-size: 11px; color: #0078d4; }
+  .duration-badge { background: #f0f0f0; border-radius: 3px; padding: 2px 6px; font-size: 11px; color: #555; }
+
+  /* Activity log */
+  .activity-list { list-style: none; }
+  .activity-item { display: flex; gap: 14px; padding: 12px 18px; border-bottom: 1px solid #f0f0f0; align-items: flex-start; }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+  .icon-playbook { background: #e6f0fb; color: #0078d4; }
+  .icon-comment { background: #e6f4ea; color: #107c10; }
+  .icon-user { background: #f3e8ff; color: #6b21a8; }
+  .activity-body { flex: 1; }
+  .activity-title { font-weight: 600; font-size: 12px; color: #1a1a1a; margin-bottom: 3px; }
+  .activity-detail { font-size: 12px; color: #444; line-height: 1.6; }
+  .activity-time { font-size: 11px; color: #888; margin-top: 3px; }
+  .comment-box { background: #f5faf5; border: 1px solid #c8e6c9; border-radius: 4px; padding: 10px 12px; margin-top: 6px; font-size: 12px; line-height: 1.7; color: #1a1a1a; }
+  .comment-box strong { display: block; margin-bottom: 4px; color: #107c10; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Run History -->
+  <div class="panel">
+    <div class="panel-header">
+      Zava-Contain-CrossLayer — Run history
+      <span class="breadcrumb">Logic Apps › rg-soclab › Zava-Contain-CrossLayer › Run history</span>
+    </div>
+    <div class="panel-body">
+      <table class="run-table">
+        <thead>
+          <tr>
+            <th>Identifier</th>
+            <th>Status</th>
+            <th>Start time (Local Time)</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="run-id">08585867432176543921</span></td>
+            <td><span class="status-succeeded"><span class="status-dot"></span>Succeeded</span></td>
+            <td>6/30/2026, 2:41:07 PM</td>
+            <td><span class="duration-badge">2m 38s</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Incident Activity Log -->
+  <div class="panel">
+    <div class="panel-header">
+      SOC Lab — Cross-Layer AI Incident — Activity log
+      <span class="breadcrumb">Microsoft Sentinel › Incidents › Activity log</span>
+    </div>
+    <div class="panel-body">
+      <ul class="activity-list">
+
+        <li class="activity-item">
+          <div class="activity-icon icon-playbook">▶</div>
+          <div class="activity-body">
+            <div class="activity-title">Playbook run — Zava-Contain-CrossLayer</div>
+            <div class="activity-detail">Playbook triggered manually by dan.beckett@solliance.net</div>
+            <div class="activity-time">6/30/2026, 2:41:07 PM</div>
+          </div>
+        </li>
+
+        <li class="activity-item">
+          <div class="activity-icon icon-comment">✓</div>
+          <div class="activity-body">
+            <div class="activity-title">Comment added by Zava-Contain-CrossLayer</div>
+            <div class="comment-box">
+              <strong>Containment summary — Zava-Contain-CrossLayer</strong>
+              <strong>Step 1 — Identity (Mariya Petrova sessions):</strong> Revoke sign-in sessions completed (Compose stub — action confirmed executed manually in Task 01).<br>
+              <strong>Step 2 — Identity (sp-refund-agent-inference):</strong> Service principal disabled (Compose stub — action confirmed executed manually in Task 01).<br>
+              <strong>Step 3 — Data / AI (trusted-report.docx):</strong> Blob delete request sent to grounding container. Response: 202 Accepted (blob absent or deleted successfully).<br>
+              <strong>Step 4 — Manual approval:</strong> Approval request sent to mariya.petrova@AcesaDev.onmicrosoft.com. Response received: <strong>Approved</strong>.<br>
+              <strong>Step 5 — Infrastructure (oai-soclab-v02):</strong> Network access rules updated — public access restricted.<br>
+              <strong>Step 6 — Sentinel comment:</strong> Containment summary posted. All steps completed. Incident updated.
+            </div>
+            <div class="activity-time">6/30/2026, 2:43:45 PM</div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex03 Logic App Connector Table</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 18px 0; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  .step { font-weight: bold; text-align: center; width: 40px; }
+  .approval { background: #fff3cd !important; }
+</style>
+</head>
+<body>
+<h2>Zava-Contain-CrossLayer — Logic App Workflow Design</h2>
+<p class="sub">Generated connector and action mapping for the infrastructure-layer containment playbook.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Step</th>
+      <th>Description</th>
+      <th>Logic Apps Connector</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="approval">
+      <td class="step">1</td>
+      <td>Send approval email and wait for a human decision before restricting production inference</td>
+      <td>Office 365 Outlook</td>
+      <td>Send approval email and wait for a response</td>
+    </tr>
+    <tr>
+      <td class="step">2</td>
+      <td>If approved: update network access rules on the Azure OpenAI account resource to restrict unauthorized callers</td>
+      <td>Azure Resource Manager</td>
+      <td>Update resource</td>
+    </tr>
+    <tr>
+      <td class="step">3</td>
+      <td>Remove the service principal role assignment on the resource group to cut infrastructure reach</td>
+      <td>Azure Management API (HTTP)</td>
+      <td>Delete role assignment</td>
+    </tr>
+    <tr>
+      <td class="step">4</td>
+      <td>Post containment summary and approval decision to the Microsoft Sentinel incident for audit trail</td>
+      <td>Microsoft Sentinel</td>
+      <td>Post comment to incident</td>
+    </tr>
+  </tbody>
+</table>
+<p style="margin-top: 20px; font-size: 12px; color: #444; max-width: 800px;">
+  <strong>Note:</strong> Step 1 (manual approval gate) is essential before Step 2 — isolating <code>oai-soclab-v02</code> in <code>rg-soclab</code> can take the Refund Agent offline for legitimate users. The approval gate ensures a human authorizes the production impact before containment executes.
+</p>
+</body>
+</html>

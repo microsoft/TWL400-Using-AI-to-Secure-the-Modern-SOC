@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex02 Five-Stage Attack Lifecycle</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 18px 0; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  .stage-num { font-weight: bold; white-space: nowrap; text-align: center; }
+  code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 12px; }
+  .through-line { margin-top: 20px; padding: 10px 14px; background: #eef4fb; border-left: 4px solid #1a3a5c; font-size: 12px; color: #333; }
+  .through-line strong { display: block; margin-bottom: 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+<h2>Exercise 02 — Five-Stage Attack Lifecycle</h2>
+<p class="sub">All five stages placed and linked end to end — each backed by a query result and tied to an Exercise 01 entity.</p>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Stage</th>
+      <th>Layer</th>
+      <th>Entity</th>
+      <th>Evidenced by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="stage-num">1</td>
+      <td>Initial access</td>
+      <td>Identity</td>
+      <td>Mariya Petrova / <code>102.89.42.17</code></td>
+      <td><code>SocLabEvents_CL</code> (<code>Stage_s == "1-Identity"</code>)</td>
+    </tr>
+    <tr>
+      <td class="stage-num">2</td>
+      <td>Poisoning</td>
+      <td>Email / poisoning</td>
+      <td>Look-alike sender → <code>trusted-report.docx</code> (grounding storage)</td>
+      <td><code>SocLabEvents_CL</code> (<code>Stage_s == "2-Email"</code>)</td>
+    </tr>
+    <tr>
+      <td class="stage-num">3</td>
+      <td>Reasoning probe</td>
+      <td>AI</td>
+      <td>Zava Refund Agent (<code>oai-soclab-v02</code>)</td>
+      <td>Defender for Cloud — AI threat protection alert (<code>SecurityAlert</code>)</td>
+    </tr>
+    <tr>
+      <td class="stage-num">4</td>
+      <td>Lateral movement</td>
+      <td>Infrastructure</td>
+      <td><code>sp-refund-agent-inference</code> → <code>rg-zava-ai-prod</code></td>
+      <td><code>SocLabEvents_CL</code> (<code>Stage_s == "4-Infra"</code>)</td>
+    </tr>
+    <tr>
+      <td class="stage-num">5</td>
+      <td>Execution</td>
+      <td>Endpoint</td>
+      <td>OPS-LT-0427 / <code>update_check.ps1</code></td>
+      <td><code>SocLabEvents_CL</code> (<code>Stage_s == "5-Endpoint"</code>, synthetic asset)</td>
+    </tr>
+  </tbody>
+</table>
+<div class="through-line">
+  <strong>Through-line</strong>
+  The same identity compromise (Stage 1) enabled the grounding poisoning (Stage 2), which shaped the agent probing (Stage 3) that Defender for Cloud AI alerted on; the attacker then reached for AI infrastructure (Stage 4) and executed on the endpoint (Stage 5) — a designed attack scenario spanning roughly <strong>75 minutes</strong> from initial access to high-value AI assets. All five stages are placed and linked end to end, cut from ~25 decoys. Note: all seeded events share a single <code>TimeGenerated</code> (ingestion timestamp) — sequence follows logical order via <code>Stage_s</code>, not <code>TimeGenerated</code>.
+</div>
+</body>
+</html>

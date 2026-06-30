@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex03 Autonomous vs Human-Approved Decision Table</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 18px 0; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  .auto { color: #1a6e1a; font-weight: bold; }
+  .human { color: #c00; font-weight: bold; }
+  .layer { white-space: nowrap; }
+  .rule { margin-top: 20px; padding: 12px 16px; background: #f0f4f8; border-left: 4px solid #1a3a5c; font-size: 12px; max-width: 900px; }
+</style>
+</head>
+<body>
+<h2>Exercise 03 — Autonomous vs. Human-Approved Decision Table</h2>
+<p class="sub">Each response action classified by reversibility and blast radius. Boundary: autonomous where reversible and low-blast-radius; human-approved where business-impacting.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Response Action</th>
+      <th>Layer</th>
+      <th>Mode</th>
+      <th>Rationale</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Revoke Mariya Petrova's sign-in sessions</td>
+      <td class="layer">Identity</td>
+      <td class="auto">Autonomous</td>
+      <td>Cheap and reversible — she simply reauthenticates with MFA. Stops token replay immediately; near-zero blast radius.</td>
+    </tr>
+    <tr>
+      <td>Apply reauthentication CA policy (<code>CA-Refund-Ops-Reauth</code>)</td>
+      <td class="layer">Identity</td>
+      <td class="auto">Autonomous</td>
+      <td>Narrowly scoped to one user; easily reversed by removing or narrowing the policy. Closes the AiTM-stolen-token path without affecting any other user.</td>
+    </tr>
+    <tr>
+      <td>Disable service principal <code>sp-refund-agent-inference</code> and rotate secrets</td>
+      <td class="layer">Identity</td>
+      <td class="auto">Autonomous</td>
+      <td>Reversible (re-enable + issue new secret). The principal is already behaving anomalously; disabling it stops lateral movement without taking the user-facing agent offline.</td>
+    </tr>
+    <tr>
+      <td>Quarantine <code>trusted-report.docx</code> from the <code>grounding</code> container</td>
+      <td class="layer">Data / AI</td>
+      <td class="auto">Autonomous</td>
+      <td>Reversible (restore from quarantine). Removing one poisoned document from grounding does not disrupt the service; high upside in stopping further poisoned Refund Agent answers.</td>
+    </tr>
+    <tr>
+      <td>Isolate / restrict Azure OpenAI resource <code>oai-soclab-v02</code> (network access rules)</td>
+      <td class="layer">Infrastructure</td>
+      <td class="human">Human-approved</td>
+      <td>Business-impacting — can take the Refund Agent offline for legitimate staff. Requires owner judgment (Quinton, Infrastructure Lead; Vikram, CISO notified) that containment outweighs the service outage.</td>
+    </tr>
+    <tr>
+      <td>Disable the Zava Refund Agent entirely (hypothetical escalation)</td>
+      <td class="layer">AI / App</td>
+      <td class="human">Human-approved</td>
+      <td>Highest blast radius — full loss of service. Reserved for an explicit human decision (Amy, App/AI Security Lead; CISO sign-off required). Not implemented in <code>Zava-Contain-CrossLayer</code>.</td>
+    </tr>
+  </tbody>
+</table>
+<div class="rule">
+  <strong>Boundary rule of thumb:</strong> Run autonomously where the action is reversible and low-blast-radius (revoking sessions, applying a narrowly scoped CA policy, quarantining the poisoned document, disabling an anomalous service principal). Require human approval where the action is business-impacting or hard to reverse (isolating production inference infrastructure, disabling the Refund Agent).
+</div>
+</body>
+</html>

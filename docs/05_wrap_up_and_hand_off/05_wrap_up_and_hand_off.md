@@ -46,6 +46,4 @@ The ~25 decoy incidents and the real Microsoft Defender for Cloud — AI threat 
 - [Microsoft Defender XDR — unified SecOps](https://learn.microsoft.com/en-us/unified-secops-platform/overview-unified-security){:target="_blank"}
 - [Threat protection for AI workloads in Defender for Cloud](https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-threat-protection){:target="_blank"}
 
-## Summary
-
-You proved what happened to Zava, showed exactly why the current SOC missed it — uncorrelated signals buried in ~25 decoy incidents, and demonstrated the AI-driven response that contains it at machine speed — and you packaged that proof for leadership. That is the work of securing the modern SOC.
+Congratulations! You proved what happened to Zava, showed exactly why the current SOC missed it — uncorrelated signals buried in ~25 decoy incidents, and demonstrated the AI-driven response that contains it at machine speed — and you packaged that proof for leadership. That is the work of securing the modern SOC.

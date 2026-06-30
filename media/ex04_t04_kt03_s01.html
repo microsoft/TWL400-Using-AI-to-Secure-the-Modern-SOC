@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Proof Through Scenario — Zava Cross-Layer Incident</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; background: #f0f4f8; color: #111; }
+
+  .page { max-width: 980px; margin: 0 auto; padding: 32px 24px 48px; }
+
+  /* Cover header */
+  .cover { background: #0a2540; color: #fff; border-radius: 8px; padding: 28px 32px; margin-bottom: 28px; }
+  .cover h1 { font-size: 22px; font-weight: 700; letter-spacing: .3px; margin-bottom: 6px; }
+  .cover .subtitle { font-size: 12px; color: #90b8d8; margin-bottom: 18px; }
+  .cover-meta { display: flex; gap: 32px; font-size: 12px; color: #adc8df; }
+  .cover-meta span strong { color: #fff; }
+
+  /* Section labels */
+  .section { background: #fff; border: 1px solid #dde3ea; border-radius: 8px; padding: 24px 28px; margin-bottom: 20px; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #0078d4; margin-bottom: 10px; }
+  .section h2 { font-size: 15px; font-weight: 600; color: #0a2540; margin-bottom: 14px; border-bottom: 1px solid #eef0f3; padding-bottom: 8px; }
+
+  /* Executive summary */
+  .exec-summary p { line-height: 1.85; font-size: 13.5px; color: #222; }
+
+  /* Component index table */
+  .index-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .index-table th { background: #f5f7fa; text-align: left; padding: 8px 12px; border: 1px solid #e0e4ea; color: #444; font-weight: 600; }
+  .index-table td { padding: 8px 12px; border: 1px solid #e0e4ea; vertical-align: top; }
+  .index-table tr:nth-child(even) td { background: #fafbfc; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+  .badge-0 { background: #e6f0fb; color: #0078d4; }
+  .badge-1 { background: #e6f4ea; color: #1a7a3a; }
+  .badge-2 { background: #fff3cd; color: #856404; }
+  .badge-3 { background: #f3e8ff; color: #6b21a8; }
+
+  /* Mermaid diagram */
+  .diagram-wrap { overflow-x: auto; background: #fafbfc; border: 1px solid #e0e4ea; border-radius: 6px; padding: 20px; }
+
+  /* Failure-point table */
+  .fp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .fp-table th { background: #f5f7fa; text-align: left; padding: 8px 10px; border: 1px solid #e0e4ea; font-weight: 600; color: #333; }
+  .fp-table td { padding: 8px 10px; border: 1px solid #e0e4ea; vertical-align: top; }
+  .fp-table tr.ai-row td { background: #fff9e6; }
+  .fp-table tr.cross-row td { background: #fff0f0; }
+  .tag { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+  .tag-missed { background: #fce8e8; color: #b91c1c; }
+  .tag-partial { background: #fff3cd; color: #92400e; }
+  .tag-gap { background: #e0ecff; color: #1d4ed8; }
+  .callout-red { background: #fff0f0; border-left: 4px solid #dc2626; padding: 10px 14px; border-radius: 4px; margin-top: 14px; font-size: 12px; }
+  .callout-red strong { color: #b91c1c; display: block; margin-bottom: 4px; }
+
+  /* Impact narrative */
+  .panels { display: flex; gap: 16px; }
+  .panel { flex: 1; border-radius: 6px; padding: 16px 18px; }
+  .panel-ciso { border: 2px solid #0a2540; background: #f5f8fc; }
+  .panel-caio { border: 2px solid #5b21b6; background: #faf5ff; }
+  .panel-title { font-weight: 700; font-size: 12px; margin-bottom: 10px; }
+  .panel-ciso .panel-title { color: #0a2540; }
+  .panel-caio .panel-title { color: #5b21b6; }
+  .panel p { font-size: 12px; line-height: 1.75; color: #333; }
+  .panel p + p { margin-top: 8px; }
+
+  /* Hand-off callout */
+  .handoff { background: #e6f4ea; border: 1px solid #86efac; border-radius: 6px; padding: 14px 18px; font-size: 12px; }
+  .handoff strong { display: block; margin-bottom: 6px; color: #14532d; font-size: 12px; }
+  .handoff ul { list-style: disc; padding-left: 18px; color: #166534; line-height: 1.7; }
+
+  /* Footer */
+  .footer { text-align: center; margin-top: 20px; font-size: 11px; color: #999; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="subtitle">PROOF THROUGH SCENARIO — CONFIDENTIAL</div>
+    <h1>Zava AI-Layer Cross-Layer Incident</h1>
+    <div class="cover-meta">
+      <span><strong>Incident:</strong> SOC Lab — Cross-Layer AI Attack</span>
+      <span><strong>Dwell time:</strong> ~75 minutes</span>
+      <span><strong>Stages:</strong> 5 (Identity → Data → AI → Cloud → Endpoint)</span>
+      <span><strong>Audience:</strong> CISO · CAIO · Module 4 · Module 5</span>
+    </div>
+  </div>
+
+  <!-- Component index -->
+  <div class="section">
+    <div class="section-label">Package contents</div>
+    <h2>Proof Through Scenario — Component Index</h2>
+    <table class="index-table">
+      <thead>
+        <tr><th>#</th><th>Component</th><th>Source</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-0">0</span></td><td>Executive summary</td><td>Task 04, Key Task 01</td><td>One paragraph: attack, failure, fix — the standalone cover</td></tr>
+        <tr><td><span class="badge badge-1">1</span></td><td>End-to-end attack visualization</td><td>Task 01, Key Task 03</td><td>The five-stage cross-layer chain in one picture</td></tr>
+        <tr><td><span class="badge badge-2">2</span></td><td>Failure-point summary</td><td>Task 02, Key Task 03</td><td>What detection / response broke down, and the AI blind spot</td></tr>
+        <tr><td><span class="badge badge-3">3</span></td><td>Business-impact narrative</td><td>Task 03, Key Task 03</td><td>SOC-overload impact + AI-driven fix, framed for CISO and CAIO</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 0: Executive Summary -->
+  <div class="section exec-summary">
+    <div class="section-label">Component 0 — Executive Summary</div>
+    <h2>One-paragraph opening — CISO / CAIO audience</h2>
+    <p>A five-stage attack moved from a stolen employee credential to active operations against Zava's production AI infrastructure in approximately 75 minutes, passing through identity, data, AI, cloud infrastructure, and endpoint in sequence — with each stage generating a separate, low-severity alert in a different tool and every signal competing for attention among roughly 25 other incidents. A well-staffed security team managing 50 to 75 fragmented tools could not realistically correlate those signals at the pace the attacker moved; the AI-layer alert fired and was lost in the noise, the poisoned data source was never connected to the identity compromise that enabled it, and 75 minutes of unchecked access to a production AI system was the result. An AI-driven security operations model changes the outcome at every step: it correlates the five-stage chain into a single incident automatically, surfaces the AI-layer signals that a conventional model drops, and executes coordinated containment across identity, data, and infrastructure in minutes rather than hours — with human approval preserved for the actions that carry business risk.</p>
+  </div>
+
+  <!-- 1: Attack Visualization -->
+  <div class="section">
+    <div class="section-label">Component 1 — End-to-End Attack Visualization</div>
+    <h2>Five-stage cross-layer attack chain</h2>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+flowchart LR
+  subgraph S1["Stage 1 — Identity"]
+    A1["Credential phish\n(Mariya Petrova)"]
+    A2["MFA bypass\nToken replay"]
+  end
+  subgraph S2["Stage 2 — Data"]
+    B1["Enumerate SharePoint\nblob storage"]
+    B2["Upload trusted-report.docx\n(poisoned grounding doc)"]
+  end
+  subgraph S3["Stage 3 — AI"]
+    C1["Query sp-refund-agent\nwith poisoned context"]
+    C2["Exfiltrate via\ngrounding responses"]
+  end
+  subgraph S4["Stage 4 — Cloud Infrastructure"]
+    D1["Escalate via\nsp-refund-agent-inference"]
+    D2["Azure resource\nenumeration"]
+  end
+  subgraph S5["Stage 5 — Endpoint"]
+    E1["Lateral move\nto endpoint"]
+    E2["Persistence\nestablished"]
+  end
+  A1 --> A2 --> B1 --> B2 --> C1 --> C2 --> D1 --> D2 --> E1 --> E2
+  style S1 fill:#fce8e8,stroke:#b91c1c
+  style S2 fill:#fff3cd,stroke:#d97706
+  style S3 fill:#e0ecff,stroke:#1d4ed8
+  style S4 fill:#f3e8ff,stroke:#6b21a8
+  style S5 fill:#e6f4ea,stroke:#15803d
+      </div>
+    </div>
+  </div>
+
+  <!-- 2: Failure-Point Summary -->
+  <div class="section">
+    <div class="section-label">Component 2 — Failure-Point Summary</div>
+    <h2>What broke — and the AI blind spot</h2>
+    <table class="fp-table">
+      <thead>
+        <tr><th>Stage</th><th>Entity / Alert</th><th>Detection status</th><th>Response status</th><th>AI-layer gap</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>S1 — Identity</td>
+          <td>Mariya Petrova token replay</td>
+          <td><span class="tag tag-partial">Partial</span> Entra alert fired</td>
+          <td><span class="tag tag-missed">Missed</span> Not correlated</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>S2 — Data</td>
+          <td>trusted-report.docx upload</td>
+          <td><span class="tag tag-missed">Missed</span> No DLP trigger</td>
+          <td><span class="tag tag-missed">Missed</span></td>
+          <td>—</td>
+        </tr>
+        <tr class="ai-row">
+          <td>S3 — AI (pivot)</td>
+          <td>sp-refund-agent inference anomaly</td>
+          <td><span class="tag tag-partial">Partial</span> Low-severity alert</td>
+          <td><span class="tag tag-missed">Missed</span> Lost in noise</td>
+          <td><strong>AI signals not surfaced to SOC</strong></td>
+        </tr>
+        <tr>
+          <td>S4 — Cloud Infra</td>
+          <td>sp-refund-agent-inference escalation</td>
+          <td><span class="tag tag-missed">Missed</span></td>
+          <td><span class="tag tag-missed">Missed</span></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>S5 — Endpoint</td>
+          <td>Lateral movement / persistence</td>
+          <td><span class="tag tag-partial">Partial</span> Endpoint alert</td>
+          <td><span class="tag tag-missed">Missed</span> No cross-layer context</td>
+          <td>—</td>
+        </tr>
+        <tr class="cross-row">
+          <td colspan="2"><strong>Cross-layer correlation</strong></td>
+          <td colspan="2"><span class="tag tag-gap">Gap</span> Signals fragmented across 50–75 tools; never assembled into one incident</td>
+          <td>Root cause of complete miss</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout-red">
+      <strong>AI-layer finding</strong>
+      Stage 3 (AI) is the only stage where an attacker can traverse all five layers in one operation — identity compromise enables data poisoning enables AI exfiltration enables cloud escalation enables endpoint persistence — yet AI signals are the least likely to appear in a conventional SOC queue. Without AI-aware detection, Stage 3 is effectively invisible.
+    </div>
+  </div>
+
+  <!-- 3: Business-Impact Narrative -->
+  <div class="section">
+    <div class="section-label">Component 3 — Business-Impact Narrative</div>
+    <h2>Executive framing — CISO and CAIO perspectives</h2>
+    <div class="panels">
+      <div class="panel panel-ciso">
+        <div class="panel-title">Vikram Nair · CISO</div>
+        <p>A single stolen credential cascaded through five security layers in 75 minutes because no tool in the stack was watching the connections between layers — only the events within each one. The SOC managed 25 concurrent incidents across 50–75 tools; the cross-layer chain was statistically indistinguishable from background noise. That's not a resourcing failure. It's a structural one: the current model cannot produce a coordinated response faster than the attacker can move.</p>
+        <p>An AI-driven SOC resolves the structural problem. It correlates cross-layer signals automatically, cuts mean-time-to-detect from hours to minutes, and executes containment — credential revocation, data quarantine, playbook trigger — without waiting for a human to assemble the picture. Human judgment stays in the loop for decisions that carry business risk. The operational model doesn't require replacing the stack; it requires adding correlation and autonomous response as a layer above it.</p>
+      </div>
+      <div class="panel panel-caio">
+        <div class="panel-title">Michelle Osei · CAIO</div>
+        <p>The attacker's chosen pivot point was the AI layer — specifically, the grounding documents that sp-refund-agent uses to answer customer queries. Poisoning that document didn't require breaking any AI-specific security control, because no AI-specific security control existed. The pipeline ingested the document as trusted input, and the agent answered accordingly for as long as the document sat in the container.</p>
+        <p>The implication for AI governance is direct: every production AI system that ingests external data is a potential exfiltration channel, and the signals it generates when abused — anomalous inference patterns, unexpected grounding sources, response drift — are invisible to a SOC that monitors at the identity, network, and endpoint layers. AI security requires AI-aware monitoring. The Proof Through Scenario is the evidence that gap is not theoretical.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hand-off -->
+  <div class="handoff">
+    <strong>Hand-off confirmation — ready for Module 4 and Module 5</strong>
+    <ul>
+      <li><strong>Module 4 (SOC operating model)</strong> — the failure-point summary (Component 2) and the autonomy boundary from Exercise 03 are the inputs for redesigning how the SOC detects and responds.</li>
+      <li><strong>Module 5 (executive value)</strong> — the visualization (Component 1) and business-impact narrative (Component 3) are the spine of the value case for Vikram and Michelle.</li>
+    </ul>
+  </div>
+
+  <div class="footer">Proof Through Scenario · Zava AI-Layer Incident · TWL400 Securing the AI-Enabled SOC · Illustrative — validate against provisioned lab tenant before external use</div>
+</div>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true } });
+</script>
+</body>
+</html>

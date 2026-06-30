@@ -1,4 +1,4 @@
-title: "TWL400: Using AI to Secure the Modern SOC"
+title: "Using AI to Secure the Modern SOC"
 description: >-
   Module 3 hands-on lab — Cross-Layer Attack Lab (End-to-End). Investigate and
   respond to a coordinated, AI-driven attack spanning identity, AI, data,
@@ -15,7 +15,7 @@ baseurl: ""
 # Header links shown in the top-right of every page.
 aux_links:
   "View on GitHub":
-    - "https://github.com/solliancenet/TWL400-Securing-AI"
+    - "https://github.com/microsoft/TWL400-Using-AI-to-Secure-the-Modern-SOC"
 aux_links_new_tab: true
 
 # Show the "next / previous" navigation between pages.
@@ -53,7 +53,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
-  - CLAUDE.md
+  - AGENTS.md
   - LICENSE
   - SECURITY.md
   - SUPPORT.md

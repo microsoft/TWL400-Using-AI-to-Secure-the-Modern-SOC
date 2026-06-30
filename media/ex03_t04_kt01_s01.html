@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex03 Residual Risk Table</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 18px 0; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  tr.dominant { background: #fff3cd !important; }
+  .layer { white-space: nowrap; font-size: 12px; }
+  .owner { font-size: 11px; color: #555; }
+  .next { font-size: 11px; font-style: italic; }
+  .statement { margin-top: 24px; padding: 12px 16px; background: #f0f4f8; border-left: 4px solid #c00; font-size: 12px; max-width: 960px; }
+</style>
+</head>
+<body>
+<h2>Exercise 03 — Residual Risk Table</h2>
+<p class="sub">Open risks that survive containment, mapped to layer, reason, owner, and next step.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Residual Risk</th>
+      <th>Layer</th>
+      <th>Why It Survives Containment</th>
+      <th>Owner</th>
+      <th>Recommended Next Step</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="dominant">
+      <td><strong>Unknown blast radius of the poisoned grounding on prior Refund Agent outputs ★</strong></td>
+      <td class="layer">Data / AI</td>
+      <td>Quarantining trusted-report.docx stops future poisoned answers, but refund decisions or guidance already produced during the Stage 2 through containment window may have been shaped by the poisoned content. The full set of affected outputs is not yet bounded.</td>
+      <td class="owner">Nancy (Data Security &amp; Governance Lead) / Amy (App/AI Security Lead)</td>
+      <td class="next">Cross-reference the Defender for Cloud AI alert window (from ExtendedProperties) against the Stage-2 SocLabEvents_CL timestamp; flag and re-handle any refund decision in that window that may have been influenced by the poisoned grounding.</td>
+    </tr>
+    <tr>
+      <td>Possible token / access persistence</td>
+      <td class="layer">Identity</td>
+      <td>Revoking sessions and disabling the service principal closes the known paths, but it is not yet proven the attacker did not establish other persistence (registered MFA method, app consent, secondary token) during the ~75-minute dwell window.</td>
+      <td class="owner">Phillip (Identity &amp; SecOps Lead)</td>
+      <td class="next">Audit Mariya's account and sp-refund-agent-inference for added MFA methods, app consents, and secondary tokens; confirm no other risky sign-ins during the dwell window.</td>
+    </tr>
+    <tr>
+      <td>Downstream data exposure via poisoned Refund Agent answers</td>
+      <td class="layer">Data</td>
+      <td>The poisoned document was in the Refund Agent's grounding container. Whether the agent surfaced sensitive refund data through manipulated answers — or whether the attacker exfiltrated directly — is not yet confirmed.</td>
+      <td class="owner">Nancy (Data Security &amp; Governance Lead)</td>
+      <td class="next">Hunt SocLabEvents_CL and Defender XDR Advanced Hunting (EmailEvents / CloudAppEvents optional) over the grounding container and associated Refund Agent activity for exfiltration indicators during the attack window.</td>
+    </tr>
+    <tr>
+      <td>Lateral reach beyond the known entities</td>
+      <td class="layer">Infrastructure / Identity</td>
+      <td>sp-refund-agent-inference moved toward rg-soclab; it is not yet confirmed whether it touched anything else in the subscription before it was disabled.</td>
+      <td class="owner">Quinton (Infrastructure &amp; Architecture Lead)</td>
+      <td class="next">Confirm the service principal's full activity in rg-soclab and adjacent resources via AzureActivity / SocLabEvents_CL; verify nothing else was accessed or modified during the Stage 4 window.</td>
+    </tr>
+  </tbody>
+</table>
+<div class="statement">
+  <strong>Residual-risk statement (CISO-ready):</strong> The attack is contained across identity, data, and infrastructure — sessions are revoked, the service principal is disabled, the poisoned document is quarantined, and inference access is restricted. However, the blast radius of the poisoned grounding on prior Refund Agent outputs is not yet fully bounded, token persistence and downstream data exposure remain unconfirmed, and the service principal's full lateral reach has not been verified. Each open risk has a named owner and a tracked next step.
+</div>
+</body>
+</html>

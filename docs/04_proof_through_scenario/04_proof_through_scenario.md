@@ -26,11 +26,4 @@ After completing this exercise, you'll be able to:
 
 ## Duration
 
-* **Estimated time:** 15 minutes
-
-## Tasks
-
-- Task 04.01 — [Assemble the end-to-end attack visualization](04_01.html)
-- Task 04.02 — [Summarize the main failure points](04_02.html)
-- Task 04.03 — [Connect failures to business impact](04_03.html)
-- Task 04.04 — [Package the Proof Through Scenario artifact](04_04.html)
+* **Estimated Time:** 15 minutes

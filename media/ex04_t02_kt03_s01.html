@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex04 Failure-Point Summary Table</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 18px 0; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  tr.ai { background: #fff3cd !important; }
+  tr.crosslayer { background: #fde8e8 !important; font-weight: bold; }
+  .callout { margin-top: 20px; padding: 12px 16px; background: #fde8e8; border-left: 4px solid #c00; font-size: 12px; max-width: 960px; }
+</style>
+</head>
+<body>
+<h2>Exercise 04 — Failure-Point Summary Table</h2>
+<p class="sub">For each stage: the signal that existed, where it lived, and why it did not lead to action. The cross-layer / AI gap row is the central finding.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Stage</th>
+      <th>Signal That Existed</th>
+      <th>Where It Lived</th>
+      <th>Why It Failed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1 — Identity</td>
+      <td>Risky / anonymous IP address sign-in for Mariya Petrova (<code>anonymousIpAddress</code> detection, medium severity)</td>
+      <td>Entra ID Protection</td>
+      <td>Medium-severity alert auto-triaged; consistent with VPN use. Not linked forward to the downstream grounding poisoning or AI-layer activity.</td>
+    </tr>
+    <tr>
+      <td>2 — Data / AI Grounding</td>
+      <td>Poisoned document uploaded to grounding storage; phishing email delivery event</td>
+      <td>Sentinel injected Stage-2 event (<code>SocLabEvents_CL</code>); Defender for Office 365</td>
+      <td>Treated as routine content and email events. No rule connected the grounding-source write to the compromised identity that authorized it or the AI-layer probing that followed.</td>
+    </tr>
+    <tr class="ai">
+      <td>3 — AI ★ dominant gap</td>
+      <td>Prompt-injection / jailbreak attempts detected and blocked by Prompt Shields</td>
+      <td>Microsoft Defender for Cloud — AI threat protection (<code>SecurityAlert</code> / <code>ExtendedProperties</code>)</td>
+      <td>Real native alert fired — the failure was not a missing sensor. The alert sat uncorrelated with the poisoned grounding, the identity compromise, the infrastructure reach, and the endpoint execution, and was buried among ~25 decoy incidents.</td>
+    </tr>
+    <tr>
+      <td>4 — Infrastructure</td>
+      <td>Anomalous token/compute requests by <code>sp-refund-agent-inference</code> toward <code>rg-soclab</code></td>
+      <td>Sentinel <code>SocLabEvents_CL</code>; corroborated by Entra workload identity logs</td>
+      <td>Indistinguishable from normal service-principal activity in isolation. Only anomalous against a known baseline and in the context of preceding AI-layer and identity events — context that no tool had aggregated.</td>
+    </tr>
+    <tr>
+      <td>5 — Endpoint</td>
+      <td>Encoded PowerShell beacon (<code>update_check.ps1</code>) on synthetic endpoint OPS-LT-0427</td>
+      <td>Sentinel <code>SocLabEvents_CL</code> (injected synthetic-asset telemetry)</td>
+      <td>Low-to-medium severity detection that reads as routine IT maintenance. No upstream context (identity origin, cloud-layer activity) was available in the endpoint console to escalate it.</td>
+    </tr>
+    <tr class="crosslayer">
+      <td>Cross-layer</td>
+      <td>The chain itself — five signals, five consoles, one attack</td>
+      <td>No single console</td>
+      <td>No correlation across the AI layer — every signal was individually plausible-benign, lost in the ~25-decoy noise, and policed in isolation. The failure was architectural, not analytical.</td>
+    </tr>
+  </tbody>
+</table>
+<div class="callout">
+  <strong>AI-layer finding:</strong> Zava's failure was not a missing sensor — the Defender for Cloud AI threat protection alert fired on the Refund Agent attack. The failure was that nothing in Zava's tooling connected that alert to the poisoned grounding source, the anomalous service principal, the compromised identity, or the endpoint execution. The most consequential stage was the one nobody tied together.
+</div>
+</body>
+</html>

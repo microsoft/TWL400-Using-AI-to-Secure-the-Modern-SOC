@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex04 Cross-Layer Attack Chain Diagram</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 24px 0; font-size: 12px; }
+  .mermaid { max-width: 100%; }
+</style>
+</head>
+<body>
+<h2>Exercise 04 — Cross-Layer Attack Chain</h2>
+<p class="sub">Five-stage attack across Identity → Data/AI → AI → Infrastructure → Endpoint. Each stage generated a separate, low-to-medium alert in a different console — no single tool saw the full chain.</p>
+
+<div class="mermaid">
+flowchart LR
+  subgraph Identity
+    S1["1 · T+0 · Initial access\nAiTM phishing → anonymous IP sign-in\nMariya Petrova · 102.89.42.17 (Tor exit node)"]
+  end
+  subgraph Data["Data / AI Grounding"]
+    S2["2 · T+16 min · Poisoning\nPoisoned policy doc into grounding storage\ntrusted-report.docx · grounding container"]
+  end
+  subgraph AI
+    S3["3 · T+34 min · Reasoning probe\nPrompt-injection / jailbreak\n(blocked by Prompt Shields)\nZava Refund Agent (oai-soclab-v02)"]
+  end
+  subgraph Infrastructure
+    S4["4 · T+52 min · Lateral movement\nAnomalous token/compute requests\nsp-refund-agent-inference"]
+  end
+  subgraph Endpoint
+    S5["5 · T+69 min · Execution\nEncoded PowerShell beacon\nOPS-LT-0427 · update_check.ps1"]
+  end
+
+  S1 --> S2 --> S3 --> S4 --> S5
+
+  classDef stage fill:#eef4ff,stroke:#4a6fb0,color:#10243e;
+  class S1,S2,S3,S4,S5 stage;
+</div>
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'default' });
+</script>
+</body>
+</html>

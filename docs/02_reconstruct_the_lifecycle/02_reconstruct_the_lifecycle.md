@@ -27,11 +27,4 @@ After completing this exercise, you'll be able to:
 
 ## Duration
 
-* **Estimated time:** 25 minutes
-
-## Tasks
-
-- Task 02.01 — [Hunt the unified Sentinel telemetry (KQL) and place each stage](02_01.html)
-- Task 02.02 — [Confirm anonymous IP sign-in and lateral movement (Defender for Identity)](02_02.html)
-- Task 02.03 — [Mark detection-failure points and telemetry blind spots](02_03.html)
-- Task 02.04 — [Record systemic dependencies and conflicting signals](02_04.html)
+* **Estimated Time:** 25 minutes

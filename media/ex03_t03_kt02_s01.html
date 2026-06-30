@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ex03 Governance Rationale</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; font-size: 13px; padding: 32px; background: #fff; }
+  h2 { font-size: 16px; margin-bottom: 4px; }
+  p.sub { color: #555; margin: 0 0 18px 0; font-size: 12px; }
+  h3 { font-size: 13px; margin: 24px 0 8px 0; color: #1a3a5c; text-transform: uppercase; letter-spacing: 0.05em; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 8px; }
+  th { background: #1a3a5c; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  td { padding: 8px 12px; border: 1px solid #ccc; vertical-align: top; }
+  tr:nth-child(even) { background: #f5f7fa; }
+  .rule { margin-top: 24px; padding: 12px 16px; background: #f0f4f8; border-left: 4px solid #1a3a5c; font-size: 12px; max-width: 900px; }
+</style>
+</head>
+<body>
+<h2>Exercise 03 — Governance Rationale</h2>
+<p class="sub">Named actions with one-line justifications for the CISO autonomy-boundary record.</p>
+
+<h3>Autonomous Actions — Safe to Run Without Human Approval</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Owner / Approver</th>
+      <th>Why It Is Safe to Automate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Revoke Mariya Petrova's sign-in sessions</td>
+      <td>SOC (automated)</td>
+      <td>Reversible in seconds — she reauthenticates with MFA. Stops token replay with zero service impact.</td>
+    </tr>
+    <tr>
+      <td>Apply reauthentication CA policy (<code>CA-Refund-Ops-Reauth</code>)</td>
+      <td>SOC (automated)</td>
+      <td>Scoped to one user account; policy is easily narrowed or removed. Closes the AiTM stolen-token path without affecting any other user or service.</td>
+    </tr>
+    <tr>
+      <td>Disable <code>sp-refund-agent-inference</code> and rotate secrets</td>
+      <td>SOC (automated)</td>
+      <td>Re-enabling and issuing a new secret takes minutes. The principal was already flagged as anomalous; disabling it stops lateral movement without touching the user-facing Refund Agent.</td>
+    </tr>
+    <tr>
+      <td>Quarantine <code>trusted-report.docx</code> from the <code>grounding</code> container</td>
+      <td>SOC (automated)</td>
+      <td>Reversible by restoring from quarantine. Removing one poisoned document does not affect Refund Agent availability; high upside in stopping further poisoned answers immediately.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Human-Approved Actions — Require Named Authorization Before Execution</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Approver</th>
+      <th>What the Gate Is Protecting Against</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Isolate / restrict Azure OpenAI resource <code>oai-soclab-v02</code></td>
+      <td>Quinton (Infrastructure Lead); Vikram (CISO) notified</td>
+      <td>Protects against taking the Refund Agent offline for legitimate staff on a false positive — a business-impacting outage that needs an owner's judgment to authorize.</td>
+    </tr>
+    <tr>
+      <td>Disable the Zava Refund Agent entirely (escalation)</td>
+      <td>Amy (App/AI Security Lead); CISO sign-off required</td>
+      <td>Protects against full loss of a production AI service without explicit executive authorization. Highest blast radius — reserved for confirmed, severe compromise only.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="rule">
+  <strong>Boundary rule (CISO-ready, one sentence):</strong> Automate the actions that buy time and are cheap to undo; require a human for the actions that cost the business and are hard to undo.
+</div>
+</body>
+</html>
