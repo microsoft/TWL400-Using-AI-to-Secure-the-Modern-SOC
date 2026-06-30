@@ -9,34 +9,34 @@ parent: 'Exercise 04: Proof Through Scenario'
 
 ## Introduction
 
-The visualization shows *what* happened. The next piece of the Proof Through Scenario explains *why nobody stopped it*. You already named these failures during the lab — the overload diagnosis in Task 04 in Exercise 01 and the failure-point log from Exercise 02. This task distills them into a tight, quotable summary of the main detection and response failures, the half of the deliverable that justifies changing how the SOC operates.
+The visualization shows *what* happened. The next piece of the Proof Through Scenario explains *why nobody stopped it*. You already named these failures during the lab — the overload diagnosis in Task 01.04 and the failure-point log from Exercise 02. This task distills them into a tight, quotable summary of the main detection and response failures, the half of the deliverable that justifies changing how the SOC operates.
 
 ## Description
 
 You will summarize where detection and response broke down across the chain and why — signals that were present but uncorrelated and buried among the ~25 decoy incidents, including the real AI alert that fired but was never tied into the cross-layer incident — and capture it as a concise failure-point summary table.
 
-## Success Criteria
+## Success criteria
 
 - You have produced a summary of the main detection and response failures across all five stages _(Validation: **main detection/response failures named and explained**)_
 - Each failure point names both the signal that *did* exist and the reason it didn't lead to action
 - The summary explicitly calls out the AI-layer failure — the real Defender for Cloud — AI threat protection alert fired, but was left uncorrelated with the poisoned grounding, the identity compromise, and the endpoint activity, and buried among the ~25 decoy incidents
 
-## Learning Resources
+## Learning resources
 
 - [Microsoft Sentinel correlation and incident grouping](https://learn.microsoft.com/en-us/azure/sentinel/detect-threats-built-in){:target="_blank"}
 - [Reduce alert noise in Microsoft Defender XDR](https://learn.microsoft.com/en-us/defender-xdr/incident-queue){:target="_blank"}
 - [AI threat protection in Microsoft Defender for Cloud](https://learn.microsoft.com/en-us/azure/defender-for-cloud/ai-threat-protection){:target="_blank"}
 
-## Key Tasks
+## Key tasks
 
 ### 01: Recall the failures from the investigation
 
 Pull the failure points you already established into one place.
 
 <details markdown="block">
-<summary><strong>Expand this section for detailed steps</strong></summary>
+<summary><strong>Expand this section to view the solution</strong></summary>
 
-1. Reopen the failure/blind-spot log from Exercise 02 and the overload diagnosis from Task 04 in Exercise 01. Between them you established two distinct kinds of failure:
+1. Reopen the failure/blind-spot log from Exercise 02 and the overload diagnosis from Task 01.04. Between them you established two distinct kinds of failure:
 
    - **Detection failures** — a signal fired (or could have) but never rose above the noise: each stage was individually low-severity, and the stages lived in five different consoles, so no analyst saw them together.
    - **Response failures** — even where a signal was noticed, response was manual, single-domain, and far too slow to contain at the ~75-minute pace the attacker moved across layers.
@@ -76,7 +76,7 @@ Pull the failure points you already established into one place.
 Call out the gap that makes this an *AI* SOC problem, not just an alert-fatigue problem.
 
 <details markdown="block">
-<summary><strong>Expand this section for detailed steps</strong></summary>
+<summary><strong>Expand this section to view the solution</strong></summary>
 
 1. State the failure plainly: the AI attack *was* detected — **Microsoft Defender for Cloud — AI threat protection** raised a real native alert on the prompt-injection probing of the **Zava Refund Agent** _(illustrative — confirm at build)_. The failure is that nothing in Zava's tooling connected that alert to the rest of the chain. It sat among the ~25 decoy incidents, uncorrelated with the poisoned grounding source, the anomalous behavior of `sp-refund-agent-inference`, the identity compromise that started it, or the endpoint execution that ended it.
 
@@ -92,7 +92,7 @@ Call out the gap that makes this an *AI* SOC problem, not just an alert-fatigue 
 Lock the failures into a single table for the deliverable.
 
 <details markdown="block">
-<summary><strong>Expand this section for detailed steps</strong></summary>
+<summary><strong>Expand this section to view the solution</strong></summary>
 
 1. Record the consolidated failures as a concise summary table. It should resemble:
 
@@ -105,13 +105,11 @@ Lock the failures into a single table for the deliverable.
    | 5 — Endpoint | Encoded PowerShell beacon on OPS-LT-0427 | Sentinel `SocLabEvents_CL` (injected synthetic-asset telemetry) | Low-severity detection; arrived with no upstream context |
    | **Cross-layer** | **The chain itself** | **No single console** | **No correlation across the AI layer, with every signal lost in the ~25-decoy noise — the failure** |
 
-2. Save this table alongside the visualization from Task 01. Together they answer "what happened" and "why we missed it."
+2. Save this table alongside the visualization from Task 04.01. Together they answer "what happened" and "why we missed it."
 
    {: .note }
    > 📷 **Screenshot to capture:** the completed failure-point summary table, including the highlighted cross-layer / AI blind-spot row.
 
 </details>
-
-## Summary
 
 Congratulations! You've summarized the main detection and response failures across the chain — naming, for each stage, the signal that existed and the reason it didn't lead to action — and called out the AI-layer failure — a real alert that fired but was never correlated and sat lost in the noise — as the central gap. With the visualization and the failure summary in hand, you'll now tie these failures to the business impact that an executive cares about.
