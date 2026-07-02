@@ -6,7 +6,7 @@ nav_order: 1
 
 # TechWorkshop L400: Using AI to Secure the Modern SOC
 
-This lab guides you through a series of practical exercises for investigating and responding to a coordinated, AI-driven attack as part of Module 3 of the *Using AI to Secure the Modern SOC* workshop. You advise Zava, an enterprise whose SOC is buried in routine, noisy alerts while a five-stage attack moves across identity, data/AI grounding, AI workloads, infrastructure, and endpoint — each signal individually low-risk and landing in a different console. Exercises cover triage and signal correlation, attack lifecycle reconstruction, coordinated automated response, and production of the Proof Through Scenario executive deliverable, using Microsoft Security Copilot, Microsoft Defender XDR, Microsoft Sentinel, Entra ID, and Microsoft Defender for Cloud.
+This lab guides you through a series of practical exercises for investigating and responding to a coordinated, AI-driven attack as part of Module 3 of the *Using AI to Secure the Modern SOC* workshop. You advise Zava, an enterprise whose SOC is buried in routine, noisy alerts while a five-stage attack moves across identity, data/AI grounding, AI workloads, infrastructure, and endpoint — each signal individually low-risk and landing in a different console. Exercises cover triage and signal correlation, attack lifecycle reconstruction, coordinated automated response, and production of the Proof Through Scenario executive deliverable, using Microsoft Security Copilot, Microsoft Defender XDR, Microsoft Sentinel, Entra ID, and Microsoft Defender for Cloud. 
 
 ## Exercises
 
