@@ -9,8 +9,8 @@ theme: just-the-docs
 
 # Generated site lives under https://<org>.github.io/<repo>/. Override `url`
 # and `baseurl` to match your GitHub Pages settings before publishing.
-url: ""
-baseurl: ""
+url: https://microsoft.github.io
+baseurl: "/TWL400-Using-AI-to-Secure-the-Modern-SOC"
 
 # Header links shown in the top-right of every page.
 aux_links:
